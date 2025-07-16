@@ -8,8 +8,7 @@
     <title>Django Content Studio</title>
     <script>
         window.DCS_STATIC_PREFIX = "{% static '' %}content_studio/";
-        window.DCS_BASENAME = "{% url 'content_studio' %}";
-        window.DCS_API_URL = "{% url 'headless_rest' %}";
+        window.DCS_BASENAME = "{% url 'content_studio_web' %}";
     </script>
   <script type="module" crossorigin src="{% static 'content_studio/assets/index.js' %}"></script>
   <link rel="stylesheet" crossorigin href="{% static 'content_studio/assets/index.css' %}">

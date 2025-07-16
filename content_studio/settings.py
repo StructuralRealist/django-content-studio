@@ -24,7 +24,7 @@ DEFAULTS = {
     "LOGIN_BACKENDS": [
         "content_studio.login_backends.UsernamePasswordBackend",
     ],
-    "EDITED__BY_ATTR": "edited_by",
+    "EDITED_BY_ATTR": "edited_by",
     "EDITED_AT_ATTR": "edited_at",
     "CREATED_BY_ATTR": "created_by",
     "CREATED_AT_ATTR": "created_at",

@@ -29,12 +29,15 @@ class UsernamePasswordViewSet(ViewSet):
             password=serializer.validated_data["password"],
         )
 
-        if user is None or not user.is_active:
-            raise PermissionDenied()
+        if user is None:
+            raise PermissionDenied(detail="Invalid username or password.")
+
+        if not user.is_active:
+            raise PermissionDenied(detail="User account is disabled.")
 
         from ..admin import admin_site
 
-        return admin_site.auth_backend.active_backend.get_response_for_user(user)
+        return admin_site.token_backend.active_backend.get_response_for_user(user)
 
 
 class UsernamePasswordBackend:

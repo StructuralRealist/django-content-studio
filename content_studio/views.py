@@ -7,6 +7,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 
+from . import __version__
 from .admin import AdminSerializer, admin_site
 from .models import ModelSerializer
 from .serializers import CurrentUserSerializer
@@ -40,6 +41,7 @@ class AdminApiViewSet(ViewSet):
         """
 
         data = {
+            "version": __version__,
             "site_header": admin_site.site_header,
             "site_title": admin_site.site_title,
             "index_title": admin_site.index_title,

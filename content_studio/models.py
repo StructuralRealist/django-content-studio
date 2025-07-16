@@ -1,6 +1,5 @@
 from django.db import models
 
-from content_framework import fields as cf_fields
 from . import widgets
 from .utils import is_jsonable
 
@@ -23,10 +22,6 @@ class ModelSerializer:
         models.TextField: widgets.TextAreaWidget,
         models.BooleanField: widgets.BooleanWidget,
         models.NullBooleanField: widgets.BooleanWidget,
-        cf_fields.MultipleChoiceField: widgets.MultipleChoiceWidget,
-        cf_fields.TagField: widgets.TagWidget,
-        cf_fields.HTMLField: widgets.RichTextWidget,
-        cf_fields.URLPathField: widgets.URLPathWidget,
     }
 
     def serialize(self):
