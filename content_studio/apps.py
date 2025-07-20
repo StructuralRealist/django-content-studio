@@ -2,8 +2,8 @@ from django.apps import AppConfig
 from django.contrib import admin
 from rest_framework import serializers
 
-from headless.utils import is_runserver
 from . import VERSION
+from .utils import is_runserver
 
 
 class DjangoContentStudioConfig(AppConfig):

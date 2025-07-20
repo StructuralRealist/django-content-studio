@@ -1,4 +1,7 @@
 {
+  "common": {
+    "search": "Zoeken"
+  },
   "login": {
     "title": "Welkom terug",
     "subtitle": "Log in op je account",
@@ -9,5 +12,10 @@
     "remember_me": "Onthoud mij",
     "forgot_password": "Wachtwoord vergeten?",
     "no_account": "Geen account? Neem contact op met je administrator."
+  },
+  "main_menu": {
+    "dashboard": "Dashboard",
+    "media_library": "Mediabibliotheek",
+    "settings": "Instellingen"
   }
 }

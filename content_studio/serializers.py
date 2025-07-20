@@ -4,13 +4,15 @@ from rest_framework import serializers
 user_model = get_user_model()
 
 
-class CurrentUserSerializer(serializers.ModelSerializer):
+class SessionUserSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source=user_model.USERNAME_FIELD)
+
     class Meta:
         model = user_model
         fields = (
             "id",
-            user_model.USERNAME_FIELD,
-            user_model.EMAIL_FIELD,
+            "username",
             "first_name",
             "last_name",
         )
+

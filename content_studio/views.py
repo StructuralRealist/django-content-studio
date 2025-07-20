@@ -1,3 +1,4 @@
+from django.apps import apps
 from django.contrib import admin
 from django.urls import reverse, NoReverseMatch
 from django.views.generic import TemplateView
@@ -10,7 +11,7 @@ from rest_framework.viewsets import ViewSet
 from . import __version__
 from .admin import AdminSerializer, admin_site
 from .models import ModelSerializer
-from .serializers import CurrentUserSerializer
+from .serializers import SessionUserSerializer
 
 
 class ContentStudioWebAppView(TemplateView):
@@ -23,7 +24,7 @@ class ContentStudioWebAppView(TemplateView):
 
 class AdminApiViewSet(ViewSet):
     """
-    Viewset for special admin endpoints.
+    View set for special admin endpoints.
     """
 
     permission_classes = [IsAdminUser]
@@ -86,7 +87,19 @@ class AdminApiViewSet(ViewSet):
         """
         Returns information about the current user.
         """
-        return Response(CurrentUserSerializer(request.user).data)
+        return Response(SessionUserSerializer(request.user).data)
+
+    @action(methods=["get"], detail=False, url_path="model_groups")
+    def model_groups(self, request):
+        content_groups = getattr(admin_site, "model_groups", None)
+
+        if not content_groups:
+            content_groups = [
+                {"label": model._meta.app_label, "icon": None}
+                for model in apps.get_models()
+            ]
+
+        return Response(content_groups)
 
 
 def get_health_check_path():

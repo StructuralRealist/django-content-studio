@@ -40,3 +40,10 @@ export interface SimpleJwtBackend {
     ACCESS_TOKEN_LIFETIME: number;
   };
 }
+
+export interface SessionUser {
+  id: string;
+  first_name: string;
+  last_name: string;
+  username: string;
+}

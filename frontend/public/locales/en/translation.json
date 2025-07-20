@@ -1,4 +1,7 @@
 {
+  "common": {
+    "search": "Search"
+  },
   "login": {
     "title": "Welcome back",
     "subtitle": "Sign in to your account",
@@ -9,5 +12,10 @@
     "remember_me": "Remember me",
     "forgot_password": "Forgot password?",
     "no_account": "Don't have an account? Contact your administrator"
+  },
+  "main_menu": {
+    "dashboard": "Dashboard",
+    "media_library": "Media library",
+    "settings": "Settings"
   }
 }

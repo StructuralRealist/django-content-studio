@@ -1,4 +1,4 @@
-from django.contrib.admin import *
+from django.contrib import admin
 from rest_framework.request import HttpRequest
 
 from .dashboard import Dashboard
@@ -7,7 +7,7 @@ from .login_backends import LoginBackendManager
 from .token_backends import TokenBackendManager
 
 
-class AdminSite(AdminSite):
+class AdminSite(admin.AdminSite):
     """
     Enhanced admin site for Django Content Studio and integration with
     Django Content Framework.
@@ -18,6 +18,8 @@ class AdminSite(AdminSite):
     login_backend = LoginBackendManager()
 
     dashboard = Dashboard()
+
+    model_groups = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -32,7 +34,7 @@ class AdminSite(AdminSite):
 admin_site = AdminSite()
 
 
-class ModelAdmin(ModelAdmin):
+class ModelAdmin(admin.ModelAdmin):
     """
     Enhanced model admin for Django Content Studio and integration with
     Django Content Framework. Although it's relatively backwards compatible,

@@ -21,6 +21,7 @@ from django.utils.module_loading import import_string
 SETTINGS_NAMESPACE = "CONTENT_STUDIO"
 
 DEFAULTS = {
+    "ADMIN_SITE": "content_studio.admin.admin_site",
     "LOGIN_BACKENDS": [
         "content_studio.login_backends.UsernamePasswordBackend",
     ],
@@ -33,6 +34,7 @@ DEFAULTS = {
 
 # List of settings that may be in string import notation.
 IMPORT_STRINGS = [
+    "ADMIN_SITE",
     "LOGIN_BACKENDS",
 ]
 
