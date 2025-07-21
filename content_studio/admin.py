@@ -47,6 +47,9 @@ class ModelAdmin(admin.ModelAdmin):
     # We set a lower limit than Django's default of 100
     list_per_page = 20
 
+    # Description shown below model name on list pages
+    list_description = ""
+
     # Configure the main section in the edit-view.
     edit_main: list[type[FormSetGroup | FormSet | str]] = []
 
@@ -104,6 +107,8 @@ class AdminSerializer:
             },
             "list": {
                 "per_page": admin_class.list_per_page,
+                "description": getattr(admin_class, "list_description", ""),
+                "display": admin_class.list_display,
             },
             "permissions": {
                 "add_permission": admin_class.has_add_permission(request),

@@ -2,13 +2,11 @@ from django.contrib.admin.models import LogEntry, ADDITION, CHANGE, DELETION
 from django.contrib.contenttypes.models import ContentType
 from rest_framework.exceptions import MethodNotAllowed, NotFound
 from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import JSONParser
 from rest_framework.permissions import DjangoModelPermissions
 from rest_framework.renderers import JSONRenderer
 from rest_framework.viewsets import ModelViewSet
 
-from .admin import admin_site
 from .settings import cs_settings
 
 
@@ -17,14 +15,14 @@ class BaseModelViewSet(ModelViewSet):
     parser_classes = [JSONParser]
     renderer_classes = [JSONRenderer]
     permission_classes = [DjangoModelPermissions]
-    pagination_class = [PageNumberPagination]
     filter_backends = [SearchFilter, OrderingFilter]
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         super(BaseModelViewSet, self).__init__()
+        admin_site = cs_settings.ADMIN_SITE
 
         self.authentication_classes = [
-            admin_site.auth_backend.active_backend.authentication_class
+            admin_site.token_backend.active_backend.authentication_class
         ]
 
     def retrieve(self, request, *args, **kwargs):

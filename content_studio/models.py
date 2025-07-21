@@ -48,6 +48,7 @@ class ModelSerializer:
         data = {
             "verbose_name": field.verbose_name,
             "required": not field.null or not field.blank,
+            "type": field.__class__.__name__,
         }
 
         if field.help_text:

@@ -1,6 +1,7 @@
 from django.apps import AppConfig
 from django.contrib import admin
 from rest_framework import serializers
+from rest_framework.pagination import PageNumberPagination
 
 from . import VERSION
 from .settings import cs_settings
@@ -47,12 +48,18 @@ class DjangoContentStudioConfig(AppConfig):
         for _model, admin_model in admin.site._registry.items():
 
             class Serializer(serializers.ModelSerializer):
+                __str__ = serializers.CharField()
+
                 class Meta:
                     model = _model
                     fields = "__all__"
 
+            class Pagination(PageNumberPagination):
+                page_size = admin_model.list_per_page
+
             class ViewSet(BaseModelViewSet):
                 serializer_class = Serializer
+                pagination_class = Pagination
                 queryset = _model.objects.all()
 
             content_studio_router.register(

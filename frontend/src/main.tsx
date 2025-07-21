@@ -6,6 +6,7 @@ import { AuthGuard, AuthProvider } from "@/auth";
 import { AuthLayout } from "@/pages/(auth)/layout";
 import { LoginPage } from "@/pages/(auth)/login/page";
 import { DashboardPage } from "@/pages/(studio)/(dashboard)/page";
+import { ModelListPage } from "@/pages/(studio)/content/[model]/page";
 import { StudioLayout } from "@/pages/(studio)/layout";
 
 const router = createBrowserRouter([
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
               {
                 path: "",
                 element: <DashboardPage />,
+              },
+              {
+                path: "/content/:model",
+                element: <ModelListPage />,
               },
             ],
           },

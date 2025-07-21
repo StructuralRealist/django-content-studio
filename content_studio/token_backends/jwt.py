@@ -21,12 +21,8 @@ class SimpleJwtViewSet(ViewSet):
 
 class SimpleJwtBackend:
     name = "Simple JWT"
-    authentication_class = None
+    authentication_class = JWTAuthentication
     view_set = SimpleJwtViewSet
-
-    def __init__(self):
-
-        self.authentication_class = JWTAuthentication
 
     @classmethod
     def get_info(cls):

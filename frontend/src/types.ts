@@ -69,6 +69,38 @@ export interface Model {
   verbose_name_plural: string;
   admin: {
     icon: string | null;
+    list: {
+      description: string;
+      display: string[];
+    };
   };
-  fields: Record<string, unknown>;
+  fields: Record<string, ModelField>;
+}
+
+export interface ModelField {
+  type: FieldType;
+  verbose_name?: string;
+  required?: boolean;
+  readonly?: boolean;
+  default?: unknown;
+  primary_key?: boolean;
+  max_length?: number;
+  help_text?: string;
+  widget?: string;
+}
+
+export enum FieldType {
+  CharField = "CharField",
+  EmailField = "EmailField",
+  TextField = "TextField",
+  URLPathField = "URLPathField",
+  DateField = "DateField",
+  DateTimeField = "DateTimeField",
+  TimeField = "TimeField",
+  BooleanField = "BooleanField",
+  IntegerField = "IntegerField",
+  FloatField = "FloatField",
+  DecimalField = "DecimalField",
+  UUIDField = "UUIDField",
+  SlugField = "SlugField",
 }

@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 const inputVariants = cva("", {
   variants: {
     variant: {
-      secondary: "bg-stone-100 border",
+      secondary: "bg-stone-100",
       default: "border bg-white",
     },
   },

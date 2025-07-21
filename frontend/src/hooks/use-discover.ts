@@ -7,6 +7,8 @@ export function useDiscover() {
   const http = useHttp();
 
   return useQuery({
+    retry: false,
+    staleTime: Infinity,
     queryKey: ["model-groups"],
     async queryFn() {
       const { data } = await http.get<{

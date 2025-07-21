@@ -50,6 +50,7 @@ export function MainMenu() {
       <div className="p-3 border-b">
         <Input
           variant="secondary"
+          className="border"
           placeholder={t("common.search")}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -63,7 +64,7 @@ export function MainMenu() {
           label={t("main_menu.dashboard")}
         />
         <MenuItem
-          to="/"
+          to="/media"
           color="pink"
           icon={<PiImageBold />}
           label={t("main_menu.media_library")}
@@ -85,6 +86,7 @@ export function MainMenu() {
                 return model ? (
                   <MenuItem
                     key={label}
+                    to={`/content/${model.label}`}
                     label={model.verbose_name_plural}
                     icon={model.admin.icon ?? <PiFileTextBold />}
                   />
@@ -194,7 +196,7 @@ function MenuItem({
           <span
             className={cn(
               "size-5 rounded flex items-center justify-center",
-              color ? COLORS[color] : "",
+              color ? COLORS[color] : "text-stone-500",
             )}
           >
             {typeof icon === "string" ? <span className={cn(icon)} /> : icon}
