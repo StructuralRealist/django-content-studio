@@ -1,14 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { useHttp } from "@/hooks/use-http";
+import type { Model, ModelGroup } from "@/types";
 
-export function useModelGroups() {
+export function useDiscover() {
   const http = useHttp();
 
   return useQuery({
     queryKey: ["model-groups"],
     async queryFn() {
-      const { data } = await http.get<any>("/model_groups");
+      const { data } = await http.get<{
+        model_groups: ModelGroup[];
+        models: Model[];
+      }>("/discover");
 
       return data;
     },

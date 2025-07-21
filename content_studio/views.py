@@ -1,6 +1,6 @@
-from django.apps import apps
 from django.contrib import admin
 from django.urls import reverse, NoReverseMatch
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAdminUser, AllowAny
@@ -9,9 +9,10 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 
 from . import __version__
-from .admin import AdminSerializer, admin_site
+from .admin import AdminSerializer, ModelGroup
 from .models import ModelSerializer
 from .serializers import SessionUserSerializer
+from .settings import cs_settings
 
 
 class ContentStudioWebAppView(TemplateView):
@@ -24,7 +25,7 @@ class ContentStudioWebAppView(TemplateView):
 
 class AdminApiViewSet(ViewSet):
     """
-    View set for special admin endpoints.
+    View set for content studio admin endpoints.
     """
 
     permission_classes = [IsAdminUser]
@@ -40,6 +41,7 @@ class AdminApiViewSet(ViewSet):
         """
         Returns public information about the Content Studio admin.
         """
+        admin_site = cs_settings.ADMIN_SITE
 
         data = {
             "version": __version__,
@@ -69,16 +71,10 @@ class AdminApiViewSet(ViewSet):
         """
         Returns information about the Django app (models, admin models, admin site, settings, etc.).
         """
-        data = {"models": []}
-        registered_models = admin.site._registry
-
-        for model, admin_class in registered_models.items():
-            data["models"].append(
-                {
-                    **ModelSerializer(model).serialize(),
-                    "admin": AdminSerializer(admin_class).serialize(request),
-                }
-            )
+        data = {
+            "models": get_models(request),
+            "model_groups": get_model_groups(),
+        }
 
         return Response(data=data)
 
@@ -89,17 +85,46 @@ class AdminApiViewSet(ViewSet):
         """
         return Response(SessionUserSerializer(request.user).data)
 
-    @action(methods=["get"], detail=False, url_path="model_groups")
-    def model_groups(self, request):
-        content_groups = getattr(admin_site, "model_groups", None)
 
-        if not content_groups:
-            content_groups = [
-                {"label": model._meta.app_label, "icon": None}
-                for model in apps.get_models()
-            ]
+def get_models(request):
+    models = []
+    registered_models = admin.site._registry
 
-        return Response(content_groups)
+    for model, admin_class in registered_models.items():
+        models.append(
+            {
+                **ModelSerializer(model).serialize(),
+                "admin": AdminSerializer(admin_class).serialize(request),
+            }
+        )
+
+    return models
+
+
+def get_model_groups():
+    admin_site = cs_settings.ADMIN_SITE
+
+    default_group = [
+        ModelGroup(
+            label=_("Content"),
+            name="default",
+            icon=None,
+            models=[model for model, admin_model in admin.site._registry.items()],
+        )
+    ]
+    # Get custom model groups or use the default one
+    model_groups = getattr(admin_site, "model_groups", None) or default_group
+
+    return [
+        {
+            "name": group.name,
+            "icon": group.icon,
+            "color": group.color,
+            "label": group.label,
+            "models": [m._meta.label_lower for m in group.models],
+        }
+        for group in model_groups
+    ]
 
 
 def get_health_check_path():

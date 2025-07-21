@@ -1,3 +1,10 @@
+import colors from "tailwindcss/colors";
+
+export type TailwindColor = Exclude<
+  keyof typeof colors,
+  "inherit" | "transparent" | "current" | "black" | "white"
+>;
+
 export interface AuthState {
   token: string | null;
   setToken(token: string | null): void;
@@ -46,4 +53,22 @@ export interface SessionUser {
   first_name: string;
   last_name: string;
   username: string;
+}
+
+export interface ModelGroup {
+  models: string[];
+  name: string;
+  icon: null;
+  color: TailwindColor;
+  label: string;
+}
+
+export interface Model {
+  label: string;
+  verbose_name: string;
+  verbose_name_plural: string;
+  admin: {
+    icon: string | null;
+  };
+  fields: Record<string, unknown>;
 }

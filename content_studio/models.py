@@ -28,7 +28,7 @@ class ModelSerializer:
         model = self.model
 
         return {
-            "label": model._meta.label,
+            "label": model._meta.label_lower,
             "verbose_name": model._meta.verbose_name,
             "verbose_name_plural": model._meta.verbose_name_plural,
             "fields": self.get_fields(),

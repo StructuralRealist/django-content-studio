@@ -1,20 +1,39 @@
-import React from "react";
+import * as R from "ramda";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { PiHouseSimpleBold, PiImageBold, PiNutBold } from "react-icons/pi";
-import { Link } from "react-router";
-import colors from "tailwindcss/colors";
+import {
+  PiCaretDownBold,
+  PiCaretRightBold,
+  PiFileTextBold,
+  PiHouseSimpleBold,
+  PiImageBold,
+  PiNutBold,
+  PiSignOut,
+} from "react-icons/pi";
+import { Link, useNavigate } from "react-router";
 
+import { useAuth } from "@/auth";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { useAdminInfo } from "@/hooks/use-admin-info";
+import { useDiscover } from "@/hooks/use-discover";
 import { useMe } from "@/hooks/use-me";
-import { useModelGroups } from "@/hooks/use-model-groups";
 import { cn } from "@/lib/utils";
+import type { TailwindColor } from "@/types";
 
 export function MainMenu() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { setToken } = useAuth();
   const { data: adminInfo } = useAdminInfo();
   const { data: me } = useMe();
-  const { data: groups } = useModelGroups();
+  const { data: discover } = useDiscover();
+  const [search, setSearch] = useState("");
 
   return (
     <nav className="w-[200px] shrink-0 flex flex-col bg-stone-50 border-r">
@@ -29,7 +48,12 @@ export function MainMenu() {
         </div>
       )}
       <div className="p-3 border-b">
-        <Input variant="secondary" placeholder={t("common.search")} />
+        <Input
+          variant="secondary"
+          placeholder={t("common.search")}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
       </div>
       <div className="flex-1 p-2 space-y-1">
         <MenuItem
@@ -44,38 +68,75 @@ export function MainMenu() {
           icon={<PiImageBold />}
           label={t("main_menu.media_library")}
         />
-      </div>
-      <div className="p-2">
+
+        <div className="h-4" role="separator" />
+
+        {discover?.model_groups.map((group) => (
+          <MenuItem
+            key={group.name}
+            color={group.color ?? "blue"}
+            icon={group.icon ?? <PiFileTextBold />}
+            label={group.label}
+          >
+            {group.models
+              .map((label) => {
+                const model = discover.models.find(R.whereEq({ label }));
+
+                return model ? (
+                  <MenuItem
+                    key={label}
+                    label={model.verbose_name_plural}
+                    icon={model.admin.icon ?? <PiFileTextBold />}
+                  />
+                ) : null;
+              })
+              .filter((el) => !R.isNil(el))}
+          </MenuItem>
+        ))}
+
+        <div className="h-4" role="separator" />
+
         <MenuItem to="/" icon={<PiNutBold />} label={t("main_menu.settings")} />
       </div>
       <div className="p-1 border-t">
         {me && (
-          <div className="flex items-center gap-3 hover:bg-stone-200 p-2 rounded-md select-none">
-            <div className="relative rounded-full size-8 bg-indigo-500 text-indigo-100 flex items-center justify-center font-bold shrink-0 text-xs">
-              {`${me.first_name ?? ""}${me.last_name ?? ""}${me.username ?? ""}`
-                .trim()
-                .replace(/\s/g, "")
-                .slice(0, 2)
-                .toUpperCase()}
-              <div className="bg-emerald-500 size-2 rounded-full absolute bottom-px right-px" />
-            </div>
-            <div className="flex-1">
-              <div className="text-sm font-medium">
-                {`${me.first_name ?? ""} ${me.last_name ?? ""}`.trim()}
+          <DropdownMenu>
+            <DropdownMenuContent side="right" align="start">
+              <DropdownMenuItem
+                onClick={() => {
+                  setToken(null);
+                  navigate("/login");
+                }}
+              >
+                <PiSignOut />
+                {t("main_menu.log_out")}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+            <DropdownMenuTrigger className="flex items-center text-left w-full gap-3 hover:bg-stone-200 p-2 rounded-md select-none">
+              <div className="relative rounded-full size-8 bg-indigo-500 text-indigo-100 flex items-center justify-center font-bold shrink-0 text-xs">
+                {`${me.first_name ?? ""}${me.last_name ?? ""}${me.username ?? ""}`
+                  .trim()
+                  .replace(/\s/g, "")
+                  .slice(0, 2)
+                  .toUpperCase()}
+                <div className="bg-emerald-500 size-2 rounded-full absolute bottom-px right-px" />
               </div>
-              <div className="text-xs text-muted-foreground">{me.username}</div>
-            </div>
-          </div>
+              <div className="flex-1">
+                <div className="text-sm font-medium">
+                  {`${me.first_name ?? ""} ${me.last_name ?? ""}`.trim()}
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  {me.username}
+                </div>
+              </div>
+            </DropdownMenuTrigger>
+          </DropdownMenu>
         )}
       </div>
     </nav>
   );
 }
 
-type TailwindColor = Exclude<
-  keyof typeof colors,
-  "inherit" | "transparent" | "current" | "black" | "white"
->;
 const COLORS: Record<TailwindColor, string> = {
   slate: "bg-slate-200 text-slate-600",
   gray: "bg-gray-200 text-gray-600",
@@ -106,26 +167,51 @@ function MenuItem({
   icon,
   to,
   color,
+  children,
 }: {
   label: string;
-  icon: React.ReactNode;
-  to: string;
+  icon?: React.ReactNode | string;
+  to?: string;
   color?: TailwindColor;
+  children?: React.ReactElement[];
 }) {
+  const Comp = to ? Link : "button";
+  const [collapsed, setCollapsed] = useState(false);
+
   return (
-    <Link
-      to={to}
-      className="flex items-center text-sm font-medium gap-2 h-8 px-2 hover:bg-stone-100 rounded hover:cursor-default"
-    >
-      <span
-        className={cn(
-          "size-5 rounded flex items-center justify-center",
-          color ? COLORS[color] : "",
-        )}
+    <>
+      <Comp
+        // @ts-expect-error due to mixed component
+        to={to ?? undefined}
+        className="flex items-center w-full text-sm font-medium gap-2 h-8 px-2 hover:bg-stone-100 rounded hover:cursor-default"
+        onClick={() => {
+          if (children) {
+            setCollapsed(!collapsed);
+          }
+        }}
       >
-        {icon}
-      </span>
-      <span>{label}</span>
-    </Link>
+        {icon && (
+          <span
+            className={cn(
+              "size-5 rounded flex items-center justify-center",
+              color ? COLORS[color] : "",
+            )}
+          >
+            {typeof icon === "string" ? <span className={cn(icon)} /> : icon}
+          </span>
+        )}
+        <span className="flex items-center justify-between flex-1">
+          <span className="first-letter:uppercase">{label}</span>
+          {children ? (
+            collapsed ? (
+              <PiCaretDownBold />
+            ) : (
+              <PiCaretRightBold />
+            )
+          ) : null}
+        </span>
+      </Comp>
+      {children && collapsed ? <div className="pl-5">{children}</div> : null}
+    </>
   );
 }

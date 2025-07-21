@@ -3,6 +3,7 @@ from django.contrib import admin
 from rest_framework import serializers
 
 from . import VERSION
+from .settings import cs_settings
 from .utils import is_runserver
 
 
@@ -29,7 +30,13 @@ class DjangoContentStudioConfig(AppConfig):
                 ":white_check_mark:",
                 f"[green]Found {registered_models} admin models[/green]",
             )
+            # Set up admin site routes
+            admin_site = cs_settings.ADMIN_SITE
+            admin_site.setup()
+
+            # Set up content CRUD APIs
             self._create_crud_api()
+
             log("\n")
 
     def _create_crud_api(self):

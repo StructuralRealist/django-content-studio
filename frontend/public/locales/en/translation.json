@@ -16,6 +16,7 @@
   "main_menu": {
     "dashboard": "Dashboard",
     "media_library": "Media library",
-    "settings": "Settings"
-  }
+    "settings": "Settings",
+    "log_out": "Log out"
+  },
 }

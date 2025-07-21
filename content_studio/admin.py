@@ -1,4 +1,7 @@
+from typing import Type
+
 from django.contrib import admin
+from django.db.models import Model
 from rest_framework.request import HttpRequest
 
 from .dashboard import Dashboard
@@ -6,11 +9,12 @@ from .form import FormSet, FormSetGroup
 from .login_backends import LoginBackendManager
 from .token_backends import TokenBackendManager
 
+register = admin.register
+
 
 class AdminSite(admin.AdminSite):
     """
-    Enhanced admin site for Django Content Studio and integration with
-    Django Content Framework.
+    Enhanced admin site for Django Content Studio.
     """
 
     token_backend = TokenBackendManager()
@@ -21,8 +25,7 @@ class AdminSite(admin.AdminSite):
 
     model_groups = None
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def setup(self):
         # Add token backend's view set to the
         # Content Studio router.
         self.token_backend.set_up_router()
@@ -49,6 +52,8 @@ class ModelAdmin(admin.ModelAdmin):
 
     # Configure the sidebar in the edit-view.
     edit_sidebar: list[type[FormSet | str]] = []
+
+    icon = None
 
     def save_model(self, request, obj, form, change):
         if hasattr(obj, "edited_by"):
@@ -92,6 +97,7 @@ class AdminSerializer:
         admin_class = self.admin_class
 
         return {
+            "icon": getattr(admin_class, "icon", None),
             "edit": {
                 "main": self.serialize_edit_main(request),
                 "sidebar": self.serialize_edit_sidebar(request),
@@ -154,3 +160,25 @@ class AdminSerializer:
             return edit_sidebar
 
         return [FormSet(fields=edit_sidebar)]
+
+
+class ModelGroup:
+    name = None
+    label = None
+    icon = None
+    color = None
+    models = None
+
+    def __init__(
+        self,
+        name: str,
+        label: str = None,
+        icon: str = None,
+        color: str = None,
+        models: list[Type[Model]] = None,
+    ):
+        self.name = name
+        self.label = label or name.capitalize()
+        self.icon = icon
+        self.color = color
+        self.models = models or []

@@ -53,13 +53,7 @@ export function UsernamePasswordBackend({
       <div className="text-muted-foreground text-center mb-12">
         {t("login.subtitle")}
       </div>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          mutate(credentials);
-        }}
-        className="border rounded-lg bg-background p-4 w-full shadow-sm shadow-foreground/5"
-      >
+      <form className="border rounded-lg bg-background p-4 w-full shadow-sm shadow-foreground/5">
         <div className="relative flex items-center mb-4">
           {emailField ? (
             <LucideMail className="size-4 stroke-accent-foreground/50 absolute left-3" />
@@ -88,6 +82,12 @@ export function UsernamePasswordBackend({
             onChange={(e) =>
               setCredentials({ ...credentials, password: e.target.value })
             }
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                mutate(credentials);
+              }
+            }}
             type={passwordVisible ? "text" : "password"}
             placeholder={t("login.password_placeholder")}
             className="px-9"
@@ -95,7 +95,10 @@ export function UsernamePasswordBackend({
           />
           <button
             className="z-10 absolute right-3 hover:cursor-pointer"
-            onClick={() => setPasswordVisible(R.not)}
+            onClick={(e) => {
+              e.preventDefault();
+              setPasswordVisible(R.not);
+            }}
           >
             {passwordVisible ? (
               <LucideEyeOff className="size-4 stroke-accent-foreground/50" />

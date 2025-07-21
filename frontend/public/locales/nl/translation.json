@@ -16,6 +16,7 @@
   "main_menu": {
     "dashboard": "Dashboard",
     "media_library": "Mediabibliotheek",
-    "settings": "Instellingen"
+    "settings": "Instellingen",
+    "log_out": "Uitloggen"
   }
 }
