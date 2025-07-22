@@ -31,7 +31,7 @@ export enum LoginBackendType {
 export interface UsernamePasswordBackend {
   type: LoginBackendType.UsernamePassword;
   config: {
-    username_field_type: "EmailField" | "CharField";
+    username_field_type: FieldType.EmailField | FieldType.CharField;
   };
 }
 
@@ -79,20 +79,22 @@ export interface Model {
 
 export interface ModelField {
   type: FieldType;
-  verbose_name?: string;
   required?: boolean;
+  verbose_name?: string;
   readonly?: boolean;
   default?: unknown;
   primary_key?: boolean;
   max_length?: number;
   help_text?: string;
-  widget?: string;
+  widget?: FieldWidget;
+  format?: FieldFormat;
 }
 
 export enum FieldType {
   CharField = "CharField",
   EmailField = "EmailField",
   TextField = "TextField",
+  HTMLField = "HTMLField",
   URLPathField = "URLPathField",
   DateField = "DateField",
   DateTimeField = "DateTimeField",
@@ -103,4 +105,32 @@ export enum FieldType {
   DecimalField = "DecimalField",
   UUIDField = "UUIDField",
   SlugField = "SlugField",
+}
+
+export enum FieldFormat {
+  TextFormat = "TextFormat",
+  HtmlFormat = "HtmlFormat",
+  BooleanFormat = "BooleanFormat",
+  DateFormat = "DateFormat",
+  DateTimeFormat = "DateTimeFormat",
+  TimeFormat = "TimeFormat",
+  NumberFormat = "NumberFormat",
+  FileSizeFormat = "FileSizeFormat",
+  TagFormat = "TagFormat",
+}
+
+export enum FieldWidget {
+  InputWidget = "InputWidget",
+  TextAreaWidget = "TextAreaWidget",
+  SwitchWidget = "SwitchWidget",
+  CheckboxWidget = "CheckboxWidget",
+  DateWidget = "DateWidget",
+  DateTimeWidget = "DateTimeWidget",
+  TimeWidget = "TimeWidget",
+  RichTextWidget = "RichTextWidget",
+  RadioButtonWidget = "RadioButtonWidget",
+  SelectWidget = "SelectWidget",
+  MultiSelectWidget = "MultiSelectWidget",
+  URLPathWidget = "URLPathWidget",
+  SlugWidget = "SlugWidget",
 }

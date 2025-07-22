@@ -17,7 +17,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useHttp } from "@/hooks/use-http";
-import type { UsernamePasswordBackend } from "@/types";
+import { FieldType, type UsernamePasswordBackend } from "@/types";
 
 export function UsernamePasswordBackend({
   config,
@@ -43,7 +43,7 @@ export function UsernamePasswordBackend({
       location.href = searchParams.get("redirect") ?? "/";
     },
   });
-  const emailField = config.username_field_type === "EmailField";
+  const emailField = config.username_field_type === FieldType.EmailField;
 
   return (
     <div className="w-full max-w-md flex-1 flex flex-col items-center justify-center">

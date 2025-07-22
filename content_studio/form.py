@@ -1,3 +1,8 @@
+###
+# Form field classes are used for grouping, ordering and laying out fields.
+###
+
+
 class Field:
     """
     Field class for configuring the fields in content edit views in Django Content Studio.

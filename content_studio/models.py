@@ -1,28 +1,11 @@
 from django.db import models
 
-from . import widgets
 from .utils import is_jsonable
 
 
 class ModelSerializer:
     def __init__(self, model: type[models.Model]):
         self.model = model
-
-    widgets = {
-        models.CharField: widgets.InputWidget,
-        models.IntegerField: widgets.InputWidget,
-        models.SmallIntegerField: widgets.InputWidget,
-        models.BigIntegerField: widgets.InputWidget,
-        models.PositiveIntegerField: widgets.InputWidget,
-        models.PositiveSmallIntegerField: widgets.InputWidget,
-        models.PositiveBigIntegerField: widgets.InputWidget,
-        models.FloatField: widgets.InputWidget,
-        models.DecimalField: widgets.InputWidget,
-        models.SlugField: widgets.SlugWidget,
-        models.TextField: widgets.TextAreaWidget,
-        models.BooleanField: widgets.BooleanWidget,
-        models.NullBooleanField: widgets.BooleanWidget,
-    }
 
     def serialize(self):
         model = self.model
@@ -43,8 +26,6 @@ class ModelSerializer:
         return fields
 
     def get_field(self, field):
-        widget = self.get_widget(field)
-
         data = {
             "verbose_name": field.verbose_name,
             "required": not field.null or not field.blank,
@@ -57,15 +38,15 @@ class ModelSerializer:
         if is_jsonable(field.default):
             data["default"] = field.default
 
-        if widget:
-            data["widget"] = widget
-
         if not field.editable:
             data["readonly"] = True
 
         if field.primary_key:
             data["primary_key"] = True
             data["readonly"] = True
+
+        if field.is_relation:
+            data["related_model"] = field.related_model._meta.label_lower
 
         if getattr(field, "choices", None) is not None:
             data["choices"] = field.choices
@@ -74,9 +55,3 @@ class ModelSerializer:
             data["max_length"] = field.max_length
 
         return data
-
-    def get_widget(self, field):
-        try:
-            return self.widgets[field.__class__].__name__
-        except KeyError:
-            return None

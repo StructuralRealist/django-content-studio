@@ -1,8 +1,10 @@
 import { FieldType, type ModelField } from "@/types";
 
+import { BooleanField } from "./boolean-field";
 import { CharField } from "./char-field";
 import { DateField } from "./date-field";
 import { DateTimeField } from "./datetime-field";
+import { TimeField } from "./time-field";
 
 export function DisplayRenderer({
   value,
@@ -12,10 +14,14 @@ export function DisplayRenderer({
   field: ModelField;
 }) {
   switch (field.type) {
+    case FieldType.BooleanField:
+      return <BooleanField value={value} />;
+    case FieldType.TimeField:
+      return <TimeField value={value} />;
     case FieldType.DateField:
-      return typeof value === "string" ? <DateField value={value} /> : null;
+      return <DateField value={value} />;
     case FieldType.DateTimeField:
-      return typeof value === "string" ? <DateTimeField value={value} /> : null;
+      return <DateTimeField value={value} />;
     default:
       return <CharField value={value} />;
   }

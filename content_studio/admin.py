@@ -1,9 +1,11 @@
 from typing import Type
 
 from django.contrib import admin
+from django.db import models
 from django.db.models import Model
 from rest_framework.request import HttpRequest
 
+from . import widgets
 from .dashboard import Dashboard
 from .form import FormSet, FormSetGroup
 from .login_backends import LoginBackendManager
@@ -25,6 +27,22 @@ class AdminSite(admin.AdminSite):
 
     model_groups = None
 
+    default_widget_mapping = {
+        models.CharField: widgets.InputWidget,
+        models.IntegerField: widgets.InputWidget,
+        models.SmallIntegerField: widgets.InputWidget,
+        models.BigIntegerField: widgets.InputWidget,
+        models.PositiveIntegerField: widgets.InputWidget,
+        models.PositiveSmallIntegerField: widgets.InputWidget,
+        models.PositiveBigIntegerField: widgets.InputWidget,
+        models.FloatField: widgets.InputWidget,
+        models.DecimalField: widgets.InputWidget,
+        models.SlugField: widgets.SlugWidget,
+        models.TextField: widgets.TextAreaWidget,
+        models.BooleanField: widgets.CheckboxWidget,
+        models.NullBooleanField: widgets.CheckboxWidget,
+    }
+
     def setup(self):
         # Add token backend's view set to the
         # Content Studio router.
@@ -43,6 +61,14 @@ class ModelAdmin(admin.ModelAdmin):
     Django Content Framework. Although it's relatively backwards compatible,
     some default behavior has been changed.
     """
+
+    # Override the widget used for certain fields by adding
+    # a map of field to widget. Fields that are not included
+    # will fall back to their default widget.
+    #
+    # @example
+    # widget_mapping = {'is_published': widgets.SwitchWidget}
+    widget_mapping = None
 
     # We set a lower limit than Django's default of 100
     list_per_page = 20
@@ -110,6 +136,7 @@ class AdminSerializer:
                 "description": getattr(admin_class, "list_description", ""),
                 "display": admin_class.list_display,
             },
+            "widget_mapping": getattr(admin_class, "widget_mapping", {}),
             "permissions": {
                 "add_permission": admin_class.has_add_permission(request),
                 "delete_permission": admin_class.has_delete_permission(request),

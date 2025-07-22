@@ -8,6 +8,11 @@ from .settings import cs_settings
 from .utils import is_runserver
 
 
+class RelatedField(serializers.Field):
+    def to_representation(self, value):
+        return {"id": value.id, "__str__": str(value)}
+
+
 class DjangoContentStudioConfig(AppConfig):
     name = "content_studio"
     label = "content_studio"
@@ -49,6 +54,7 @@ class DjangoContentStudioConfig(AppConfig):
 
             class Serializer(serializers.ModelSerializer):
                 __str__ = serializers.CharField()
+                serializer_related_field = RelatedField
 
                 class Meta:
                     model = _model

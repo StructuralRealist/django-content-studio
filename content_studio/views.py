@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import admin
 from django.urls import reverse, NoReverseMatch
 from django.utils.translation import gettext_lazy as _
@@ -55,6 +56,10 @@ class AdminApiViewSet(ViewSet):
                 for backend in admin_site.login_backend.active_backends
             ],
             "token_backend": admin_site.token_backend.active_backend.get_info(),
+            "widgets": {
+                model_class.__name__: widget.serialize()
+                for model_class, widget in admin_site.default_widget_mapping.items()
+            },
         }
 
         return Response(data=data)
@@ -74,6 +79,7 @@ class AdminApiViewSet(ViewSet):
         data = {
             "models": get_models(request),
             "model_groups": get_model_groups(),
+            "user_model": settings.AUTH_USER_MODEL,
         }
 
         return Response(data=data)
