@@ -1,6 +1,8 @@
 {
   "common": {
-    "search": "Zoeken"
+    "search": "Zoeken",
+    "save": "Opslaan",
+    "create": "Maak aan"
   },
   "login": {
     "title": "Welkom terug",
@@ -18,5 +20,9 @@
     "media_library": "Mediabibliotheek",
     "settings": "Instellingen",
     "log_out": "Uitloggen"
+  },
+  "editor": {
+    "title_create": "Maak {{modelName}} aan",
+    "title_edit": "Bewerk {{modelName}}"
   }
 }

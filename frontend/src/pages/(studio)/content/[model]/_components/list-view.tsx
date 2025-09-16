@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router";
+
 import { FormatRenderer } from "@/components/formats/renderer";
 import {
   Table,
@@ -16,6 +18,8 @@ export function ListView({
   items: { id: number | string; [p: string]: unknown }[];
   model: Model;
 }) {
+  const navigate = useNavigate();
+
   return (
     <div className="border rounded-lg">
       <Table>
@@ -30,7 +34,12 @@ export function ListView({
         </TableHeader>
         <TableBody>
           {items.map((item) => (
-            <TableRow key={item.id}>
+            <TableRow
+              key={item.id}
+              onClick={() =>
+                navigate({ hash: `#editor:${model.label}:${item.id}` })
+              }
+            >
               {model.admin.list.display.map((field) => (
                 <TableCell key={field}>
                   <FormatRenderer

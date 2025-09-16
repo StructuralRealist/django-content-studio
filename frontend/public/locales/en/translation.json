@@ -1,6 +1,8 @@
 {
   "common": {
-    "search": "Search"
+    "search": "Search",
+    "save": "Save",
+    "create": "Create"
   },
   "login": {
     "title": "Welcome back",
@@ -19,4 +21,8 @@
     "settings": "Settings",
     "log_out": "Log out"
   },
+  "editor": {
+    "title_create": "Create {{modelName}}",
+    "title_edit": "Edit {{modelName}}"
+  }
 }

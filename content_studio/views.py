@@ -64,6 +64,12 @@ class AdminApiViewSet(ViewSet):
                 model_class.__name__: widget.serialize()
                 for model_class, widget in admin_site.default_widget_mapping.items()
             },
+            "settings": {
+                "created_by_attr": cs_settings.CREATED_BY_ATTR,
+                "created_at_attr": cs_settings.CREATED_AT_ATTR,
+                "edited_by_attr": cs_settings.EDITED_BY_ATTR,
+                "edited_at_attr": cs_settings.EDITED_AT_ATTR,
+            },
         }
 
         return Response(data=data)
