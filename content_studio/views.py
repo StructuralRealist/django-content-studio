@@ -56,6 +56,10 @@ class AdminApiViewSet(ViewSet):
                 for backend in admin_site.login_backend.active_backends
             ],
             "token_backend": admin_site.token_backend.active_backend.get_info(),
+            "formats": {
+                model_class.__name__: frmt.serialize()
+                for model_class, frmt in admin_site.default_format_mapping.items()
+            },
             "widgets": {
                 model_class.__name__: widget.serialize()
                 for model_class, widget in admin_site.default_widget_mapping.items()

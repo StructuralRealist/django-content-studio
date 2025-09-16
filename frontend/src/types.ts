@@ -20,6 +20,8 @@ export interface AdminInfo {
   version: string;
   login_backends: LoginBackend[];
   token_backend: TokenBackend;
+  formats: Record<FieldType, { name: FieldFormat }>;
+  widget: Record<FieldType, { name: FieldWidget }>;
 }
 
 export type LoginBackend = UsernamePasswordBackend;
@@ -73,6 +75,7 @@ export interface Model {
       description: string;
       display: string[];
     };
+    format_mapping: Record<string, { name: FieldFormat }>;
   };
   fields: Record<string, ModelField>;
 }

@@ -7,6 +7,7 @@ export function useAdminInfo() {
   const http = useHttp();
 
   return useQuery({
+    retry: false,
     queryKey: ["admin-info"],
     async queryFn() {
       const { data } = await http.get<AdminInfo>("/info");

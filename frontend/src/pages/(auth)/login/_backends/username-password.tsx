@@ -12,11 +12,13 @@ import { useTranslation } from "react-i18next";
 import { Link, useSearchParams } from "react-router";
 
 import { useAuth } from "@/auth";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useHttp } from "@/hooks/use-http";
+import { getErrorMessage } from "@/lib/utils";
 import { FieldType, type UsernamePasswordBackend } from "@/types";
 
 export function UsernamePasswordBackend({
@@ -33,14 +35,18 @@ export function UsernamePasswordBackend({
   const http = useHttp();
   const { setToken } = useAuth();
   const [searchParams] = useSearchParams();
-  const { mutate, isPending } = useMutation({
+  const { mutate, isPending, error } = useMutation({
     async mutationFn(credentials: { username: string; password: string }) {
-      const { data } = await http.post<{ refresh: string; access: string }>(
-        "/login/usernamepassword",
-        credentials,
-      );
-      setToken(data.access);
-      location.href = searchParams.get("redirect") ?? "/";
+      try {
+        const { data } = await http.post<{ refresh: string; access: string }>(
+          "/login/usernamepassword",
+          credentials,
+        );
+        setToken(data.access);
+        location.href = searchParams.get("redirect") ?? "/";
+      } catch (e: unknown) {
+        throw new Error(getErrorMessage(e));
+      }
     },
   });
   const emailField = config.username_field_type === FieldType.EmailField;
@@ -53,6 +59,13 @@ export function UsernamePasswordBackend({
       <div className="text-muted-foreground text-center mb-12">
         {t("login.subtitle")}
       </div>
+      {error && (
+        <Alert variant="destructive" className="mb-4">
+          <AlertDescription className="justify-center">
+            {error.message}
+          </AlertDescription>
+        </Alert>
+      )}
       <form className="border rounded-lg bg-background p-4 w-full shadow-sm shadow-foreground/5">
         <div className="relative flex items-center mb-4">
           {emailField ? (
@@ -116,7 +129,10 @@ export function UsernamePasswordBackend({
         <Button
           className="w-full mb-2"
           disabled={isPending}
-          onClick={() => mutate(credentials)}
+          onClick={(e) => {
+            e.preventDefault();
+            mutate(credentials);
+          }}
         >
           {t("login.submit")}
         </Button>

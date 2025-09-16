@@ -5,7 +5,7 @@ from django.db import models
 from django.db.models import Model
 from rest_framework.request import HttpRequest
 
-from . import widgets
+from . import widgets, formats
 from .dashboard import Dashboard
 from .form import FormSet, FormSetGroup
 from .login_backends import LoginBackendManager
@@ -43,6 +43,25 @@ class AdminSite(admin.AdminSite):
         models.NullBooleanField: widgets.CheckboxWidget,
     }
 
+    default_format_mapping = {
+        models.CharField: formats.TextFormat,
+        models.IntegerField: formats.NumberFormat,
+        models.SmallIntegerField: formats.NumberFormat,
+        models.BigIntegerField: formats.NumberFormat,
+        models.PositiveIntegerField: formats.NumberFormat,
+        models.PositiveSmallIntegerField: formats.NumberFormat,
+        models.PositiveBigIntegerField: formats.NumberFormat,
+        models.FloatField: formats.NumberFormat,
+        models.DecimalField: formats.NumberFormat,
+        models.SlugField: formats.TextFormat,
+        models.TextField: formats.TextFormat,
+        models.BooleanField: formats.BooleanFormat,
+        models.NullBooleanField: formats.BooleanFormat,
+        models.DateField: formats.DateFormat,
+        models.DateTimeField: formats.DateTimeFormat,
+        models.TimeField: formats.TimeFormat,
+    }
+
     def setup(self):
         # Add token backend's view set to the
         # Content Studio router.
@@ -69,6 +88,14 @@ class ModelAdmin(admin.ModelAdmin):
     # @example
     # widget_mapping = {'is_published': widgets.SwitchWidget}
     widget_mapping = None
+
+    # Override the format used for certain fields by adding
+    # a map of field to format. Fields that are not included
+    # will fall back to their default format.
+    #
+    # @example
+    # format_mapping = {'file_size': widgets.FileSizeWidget}
+    format_mapping = None
 
     # We set a lower limit than Django's default of 100
     list_per_page = 20
@@ -124,6 +151,8 @@ class AdminSerializer:
 
     def serialize(self, request: HttpRequest):
         admin_class = self.admin_class
+        format_mapping = getattr(admin_class, "format_mapping", None) or {}
+        widget_mapping = getattr(admin_class, "widget_mapping", None) or {}
 
         return {
             "icon": getattr(admin_class, "icon", None),
@@ -136,7 +165,12 @@ class AdminSerializer:
                 "description": getattr(admin_class, "list_description", ""),
                 "display": admin_class.list_display,
             },
-            "widget_mapping": getattr(admin_class, "widget_mapping", {}),
+            "widget_mapping": {
+                field: widget.serialize() for field, widget in widget_mapping.items()
+            },
+            "format_mapping": {
+                field: format.serialize() for field, format in format_mapping.items()
+            },
             "permissions": {
                 "add_permission": admin_class.has_add_permission(request),
                 "delete_permission": admin_class.has_delete_permission(request),

@@ -3,7 +3,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 
 dayjs.extend(relativeTime);
 
-export function DateTimeField({ value }: { value: unknown }) {
+export function DatetimeFormat({ value }: { value: unknown }) {
   return typeof value === "string" && dayjs(value).isValid() ? (
     <span>{dayjs(value).fromNow()}</span>
   ) : null;

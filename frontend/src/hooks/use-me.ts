@@ -7,6 +7,7 @@ export function useMe() {
   const http = useHttp();
 
   return useQuery({
+    retry: false,
     queryKey: ["me"],
     async queryFn() {
       const { data } = await http.get<SessionUser>("/me");

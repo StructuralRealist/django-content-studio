@@ -1,4 +1,4 @@
-import { DisplayRenderer } from "@/components/display/renderer";
+import { FormatRenderer } from "@/components/formats/renderer";
 import {
   Table,
   TableBody,
@@ -33,9 +33,10 @@ export function ListView({
             <TableRow key={item.id}>
               {model.admin.list.display.map((field) => (
                 <TableCell key={field}>
-                  <DisplayRenderer
+                  <FormatRenderer
                     value={item[field]}
                     field={model.fields[field]}
+                    format={model.admin.format_mapping?.[field]?.name}
                   />
                 </TableCell>
               ))}

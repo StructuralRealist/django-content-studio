@@ -5,37 +5,43 @@
 ###
 
 
-class TextFormat:
+class BaseFormat:
+    @classmethod
+    def serialize(cls):
+        return {"name": cls.__name__}
+
+
+class TextFormat(BaseFormat):
     pass
 
 
-class HtmlFormat:
+class HtmlFormat(BaseFormat):
     pass
 
 
-class BooleanFormat:
+class BooleanFormat(BaseFormat):
     pass
 
 
-class DateFormat:
+class DateFormat(BaseFormat):
     pass
 
 
-class DateTimeFormat:
+class DateTimeFormat(BaseFormat):
     pass
 
 
-class TimeFormat:
+class TimeFormat(BaseFormat):
     pass
 
 
-class NumberFormat:
+class NumberFormat(BaseFormat):
     pass
 
 
-class FileSizeFormat:
+class FileSizeFormat(BaseFormat):
     pass
 
 
-class TagFormat:
+class TagFormat(BaseFormat):
     pass

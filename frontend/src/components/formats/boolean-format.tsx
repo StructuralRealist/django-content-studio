@@ -2,7 +2,7 @@ import { PiCheckBold, PiXBold } from "react-icons/pi";
 
 import { cn } from "@/lib/utils";
 
-export function BooleanField({ value }: { value: unknown }) {
+export function BooleanFormat({ value }: { value: unknown }) {
   return (
     <div
       className={cn(

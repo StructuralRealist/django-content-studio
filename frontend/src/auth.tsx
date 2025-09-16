@@ -1,6 +1,7 @@
 import * as R from "ramda";
 import React, { useContext, useEffect, useState } from "react";
 import { Navigate, Outlet, useLocation } from "react-router";
+import { useEffectOnce } from "react-use";
 
 import { useHttp } from "@/hooks/use-http";
 import { type AuthState } from "@/types";
@@ -15,6 +16,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
   const http = useHttp();
 
+  // Clear session on 401
+  useEffectOnce(() => {
+    http.interceptors.response.use(undefined, (error) => {
+      if (error.status === 401) {
+        setToken(null);
+      }
+      throw error;
+    });
+  });
+
   useEffect(() => {
     if (token) {
       localStorage.setItem(LOCALE_STORAGE_KEY, token);
@@ -24,7 +35,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       delete http.defaults.headers.common["Authorization"];
     }
     setInit(true);
-  }, [token]);
+  }, [http.defaults.headers.common, token]);
 
   return init ? (
     <AuthContext.Provider
