@@ -23,6 +23,7 @@
   },
   "editor": {
     "title_create": "Maak {{modelName}} aan",
-    "title_edit": "Bewerk {{modelName}}"
+    "title_edit": "Bewerk {{modelName}}",
+    "last_edited": "Laatst bewerkt"
   }
 }

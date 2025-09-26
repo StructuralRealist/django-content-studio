@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router";
 
-import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 import { Editor } from "./editor";
 
@@ -10,8 +10,7 @@ export function ContentEditor() {
   const [_, modelLabel, id] = location.hash.split(":");
 
   return (
-    <Sheet
-      modal
+    <Dialog
       open={location.hash.startsWith("#editor:")}
       onOpenChange={(isOpen) => {
         if (!isOpen) {
@@ -19,12 +18,13 @@ export function ContentEditor() {
         }
       }}
     >
-      <SheetContent
-        className="sm:max-w-none sm:w-[calc(100vw-200px)]"
+      <DialogContent
+        showCloseButton={false}
+        className="sm:max-w-none w-screen h-screen rounded-none p-0"
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
         <Editor modelLabel={modelLabel} id={id} />
-      </SheetContent>
-    </Sheet>
+      </DialogContent>
+    </Dialog>
   );
 }

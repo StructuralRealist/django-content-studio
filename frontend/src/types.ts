@@ -21,7 +21,13 @@ export interface AdminInfo {
   login_backends: LoginBackend[];
   token_backend: TokenBackend;
   formats: Record<FieldType, { name: FieldFormat }>;
-  widget: Record<FieldType, { name: FieldWidget }>;
+  widgets: Record<FieldType, { name: FieldWidget }>;
+  settings: {
+    created_at_attr: string;
+    created_by_attr: string;
+    edited_at_attr: string;
+    edited_by_attr: string;
+  };
 }
 
 export type LoginBackend = UsernamePasswordBackend;
@@ -70,12 +76,17 @@ export interface Model {
   verbose_name: string;
   verbose_name_plural: string;
   admin: {
+    format_mapping: Record<string, { name: FieldFormat }>;
+    widget_mapping: Record<string, { name: FieldWidget }>;
     icon: string | null;
     list: {
       description: string;
       display: string[];
     };
-    format_mapping: Record<string, { name: FieldFormat }>;
+    edit: {
+      main: FormSetGroup[];
+      sidebar: FormSet[];
+    };
   };
   fields: Record<string, ModelField>;
 }
@@ -91,6 +102,17 @@ export interface ModelField {
   help_text?: string;
   widget?: FieldWidget;
   format?: FieldFormat;
+}
+
+export interface FormSetGroup {
+  label: string;
+  formsets: FormSet[];
+}
+
+export interface FormSet {
+  title: string;
+  description: string;
+  fields: string[];
 }
 
 export enum FieldType {

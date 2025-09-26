@@ -23,6 +23,7 @@
   },
   "editor": {
     "title_create": "Create {{modelName}}",
-    "title_edit": "Edit {{modelName}}"
+    "title_edit": "Edit {{modelName}}",
+    "last_edited": "Last edited"
   }
 }
