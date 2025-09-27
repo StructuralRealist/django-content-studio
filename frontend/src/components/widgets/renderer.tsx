@@ -4,10 +4,12 @@ import { FieldWidget, type ModelField } from "@/types";
 
 export function WidgetRenderer({
   value,
+  onChange,
   field,
   widget,
 }: {
-  value: unknown;
+  value: any;
+  onChange(value: any): void;
   field: ModelField;
   widget?: FieldWidget;
 }) {
@@ -15,7 +17,11 @@ export function WidgetRenderer({
   const wdgt = widget ?? field.widget ?? info?.widgets[field.type]?.name;
 
   switch (wdgt) {
+    case FieldWidget.InputWidget:
+      return <Input value={value} onChange={(e) => onChange(e.target.value)} />;
     default:
-      return <Input value={String(value)} />;
+      return (
+        <Input readOnly value={value ? value.__str__ || String(value) : ""} />
+      );
   }
 }

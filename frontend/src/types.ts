@@ -1,5 +1,7 @@
 import colors from "tailwindcss/colors";
 
+export type Id = string;
+
 export type TailwindColor = Exclude<
   keyof typeof colors,
   "inherit" | "transparent" | "current" | "black" | "white"
@@ -102,6 +104,12 @@ export interface ModelField {
   help_text?: string;
   widget?: FieldWidget;
   format?: FieldFormat;
+}
+
+export interface Resource {
+  id: Id;
+  __str__: string;
+  [key: string]: unknown;
 }
 
 export interface FormSetGroup {
