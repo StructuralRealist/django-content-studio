@@ -1,25 +1,46 @@
 import dayjs from "dayjs";
+import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { PiArrowLeft, PiDotsThreeBold } from "react-icons/pi";
 
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useAdminInfo } from "@/hooks/use-admin-info";
-import type { Model } from "@/types";
+import type { DateTimeString, Model, Resource } from "@/types";
 
-export function Header({ model, resource }: { model: Model; resource?: any }) {
+export function Header({
+  model,
+  resource,
+  onSave,
+}: {
+  model: Model;
+  resource?: Resource;
+  onSave: VoidFunction;
+}) {
   const { t } = useTranslation();
   const { data: info } = useAdminInfo();
+  const form = useFormContext();
   const isCreate = !resource?.id;
+  const { isDirty } = form.formState;
   const editedAt =
-    resource && info ? resource[info.settings.edited_at_attr] : null;
+    resource && info
+      ? (resource[info.settings.edited_at_attr] as DateTimeString)
+      : null;
 
   return (
     model && (
       <>
         <DialogHeader className="border-b flex-row items-center gap-6 p-5">
           <DialogClose asChild>
-            <Button variant="outline" size="icon">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={(e) => {
+                if (isDirty && !confirm(t("editor.unsaved_alert"))) {
+                  e.preventDefault();
+                }
+              }}
+            >
               <PiArrowLeft />
             </Button>
           </DialogClose>
@@ -32,12 +53,14 @@ export function Header({ model, resource }: { model: Model; resource?: any }) {
             </div>
           </div>
           <div className="flex-1 flex items-center justify-end gap-2">
-            {editedAt && (
+            {editedAt ? (
               <div className="text-muted-foreground text-sm font-medium mr-4 select-none">
                 {`${t("editor.last_edited")} ${dayjs(editedAt).fromNow()}`}
               </div>
-            )}
-            <Button>{t(isCreate ? "common.create" : "common.save")}</Button>
+            ) : null}
+            <Button onClick={() => onSave()}>
+              {t(isCreate ? "common.create" : "common.save")}
+            </Button>
             <Button size="icon" variant="ghost">
               <PiDotsThreeBold />
             </Button>

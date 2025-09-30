@@ -1,6 +1,7 @@
 import * as R from "ramda";
 import { useFormContext } from "react-hook-form";
 
+import { FormatRenderer } from "@/components/formats/renderer";
 import {
   FormControl,
   FormDescription,
@@ -38,20 +39,27 @@ export function FormSet({
             const modelField = model.fields[fieldName];
 
             return (
-              <div>
+              <div key={idx}>
                 <FormField
                   control={form.control}
                   name={fieldName}
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>{modelField.verbose_name}</FormLabel>
-                      <FormControl>
-                        <WidgetRenderer
-                          key={idx}
+                      {modelField.readonly ? (
+                        <FormatRenderer
+                          value={field.value}
                           field={modelField}
-                          {...field}
                         />
-                      </FormControl>
+                      ) : (
+                        <FormControl>
+                          <WidgetRenderer
+                            key={idx}
+                            field={modelField}
+                            {...field}
+                          />
+                        </FormControl>
+                      )}
                       <FormDescription>{modelField.help_text}</FormDescription>
                       <FormMessage />
                     </FormItem>

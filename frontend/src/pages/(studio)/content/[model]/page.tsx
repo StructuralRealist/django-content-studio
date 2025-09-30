@@ -24,10 +24,12 @@ export function ModelListPage() {
   const model = discover?.models.find(R.whereEq({ label: appLabel }));
   const [view, setView] = useState<"list" | "grid">("list");
   const [page, setPage] = useState(1);
-  const [filters, setFilters] = useState<Record<string, string>>({});
+  const [filters, setFilters] = useState<Record<string, string>>({
+    search: "",
+  });
   const { data } = useQuery({
     retry: false,
-    queryKey: ["model", appLabel, filters, page],
+    queryKey: ["resources", appLabel, filters, page],
     placeholderData: keepPreviousData,
     async queryFn() {
       const { data } = await http.get<{ results: any[] }>(
@@ -64,7 +66,7 @@ export function ModelListPage() {
       </div>
 
       <div className="flex items-center justify-between mb-8">
-        <Filters filters={filters} onFilterChange={setFilters} />
+        <Filters model={model} filters={filters} onFilterChange={setFilters} />
 
         <ToggleGroup
           type="single"

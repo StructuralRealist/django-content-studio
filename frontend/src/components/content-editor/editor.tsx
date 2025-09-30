@@ -1,13 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as R from "ramda";
 import { useForm } from "react-hook-form";
-import { useUpdateEffect } from "react-use";
 import { z } from "zod";
 
 import { Form } from "@/components/ui/form";
 import { useDiscover } from "@/hooks/use-discover";
 import { useHttp } from "@/hooks/use-http";
+import type { Resource } from "@/types";
 
 import { Aside } from "./aside";
 import { Header } from "./header";
@@ -20,38 +20,62 @@ export function Editor({
   modelLabel: string;
   id?: string | null;
 }) {
+  const queryClient = useQueryClient();
   const http = useHttp();
   const { data: discover } = useDiscover();
   const model = discover?.models.find(R.whereEq({ label: modelLabel }));
-  const formSchema = z.object({});
-  const form = useForm<z.infer<typeof formSchema>>({
+  const formSchema = z.looseObject({
+    id: z.string().readonly(),
+    __str__: z.string().readonly(),
+  });
+  const form = useForm<Resource>({
     resolver: zodResolver(formSchema),
-    defaultValues: {},
+    mode: "onChange",
+    defaultValues: Object.entries(model?.fields ?? {}).reduce(
+      (defaults, [key, field]) => ({ ...defaults, [key]: field.default }),
+      {},
+    ),
   });
 
   const { data: resource } = useQuery({
+    enabled: !R.isNil(id),
     retry: false,
     queryKey: ["resources", modelLabel, id],
     async queryFn() {
-      if (id) {
-        const { data } = await http.get(`/content/${modelLabel}/${id}`);
-        return data;
-      } else {
-        return null;
-      }
+      const { data } = await http.get(`/content/${modelLabel}/${id}`);
+      form.reset(data);
+
+      return data;
     },
-    enabled: !R.isNil(id),
   });
 
-  useUpdateEffect(() => {
-    form.reset(resource);
-  }, [resource?.id]);
+  const { mutate: save } = useMutation({
+    async mutationFn(values: Resource) {
+      await http[id ? "put" : "post"](
+        `/content/${modelLabel}${id ? `/${id}` : ""}`,
+        values,
+      );
+    },
+    async onSuccess() {
+      await queryClient.invalidateQueries({
+        queryKey: ["resources", modelLabel],
+      });
+    },
+  });
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    save(values);
+  }
 
   return (
     model && (
       <Form {...form}>
         <div className="flex-1 flex flex-col">
-          <Header model={model} resource={resource} />
+          <Header
+            model={model}
+            resource={resource}
+            onSave={() => form.handleSubmit(onSubmit)()}
+          />
           <div className="flex gap-8 p-5">
             <div className="flex-1">
               <Main model={model} />

@@ -11,6 +11,10 @@ class BaseFormat:
         return {"name": cls.__name__}
 
 
+class ForeignKeyFormat(BaseFormat):
+    pass
+
+
 class TextFormat(BaseFormat):
     pass
 

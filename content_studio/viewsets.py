@@ -64,8 +64,8 @@ class BaseModelViewSet(ModelViewSet):
     def perform_create(self, serializer):
         instance = serializer.save()
 
-        if hasattr(instance, cs_settings.CREATED_BY):
-            setattr(instance, cs_settings.CREATED_BY, self.request.user)
+        if hasattr(instance, cs_settings.CREATED_BY_ATTR):
+            setattr(instance, cs_settings.CREATED_BY_ATTR, self.request.user)
             instance.save()
 
         content_type = ContentType.objects.get_for_model(instance)
@@ -81,8 +81,8 @@ class BaseModelViewSet(ModelViewSet):
     def perform_update(self, serializer):
         instance = serializer.save()
 
-        if hasattr(instance, cs_settings.EDITED_BY):
-            setattr(instance, cs_settings.EDITED_BY, self.request.user)
+        if hasattr(instance, cs_settings.EDITED_BY_ATTR):
+            setattr(instance, cs_settings.EDITED_BY_ATTR, self.request.user)
             instance.save()
 
         content_type = ContentType.objects.get_for_model(instance)

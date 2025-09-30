@@ -18,15 +18,15 @@ export function Main({ model }: { model: Model }) {
       <Tabs defaultValue={main[0]?.label}>
         {showGroups && (
           <TabsList className="w-full">
-            {main.filter(R.prop("label")).map((formSetGroup) => (
-              <TabsTrigger value={formSetGroup.label}>
+            {main.filter(R.prop("label")).map((formSetGroup, idx) => (
+              <TabsTrigger key={idx} value={formSetGroup.label}>
                 {formSetGroup.label}
               </TabsTrigger>
             ))}
           </TabsList>
         )}
-        {main.map((formSetGroup) => (
-          <TabsContent value={formSetGroup.label}>
+        {main.map((formSetGroup, idx) => (
+          <TabsContent key={idx} value={formSetGroup.label}>
             {formSetGroup.formsets.map((formSet, idx) => (
               <section key={idx} className="border rounded-lg p-4 w-full">
                 <FormSet model={model} formSet={formSet} />

@@ -5,6 +5,7 @@ import { BooleanFormat } from "./boolean-format";
 import { DateFormat } from "./date-format";
 import { DatetimeFormat } from "./datetime-format";
 import { FileSizeFormat } from "./file-size-format";
+import { ForeignKeyFormat } from "./foreign-key-format";
 import { TextFormat } from "./text-format";
 import { TimeFormat } from "./time-format";
 
@@ -31,6 +32,8 @@ export function FormatRenderer({
       return <DateFormat value={value} />;
     case FieldFormat.DateTimeFormat:
       return <DatetimeFormat value={value} />;
+    case FieldFormat.ForeignKeyFormat:
+      return <ForeignKeyFormat value={value} />;
     default:
       return <TextFormat value={value} />;
   }

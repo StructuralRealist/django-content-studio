@@ -24,6 +24,7 @@
   "editor": {
     "title_create": "Maak {{modelName}} aan",
     "title_edit": "Bewerk {{modelName}}",
-    "last_edited": "Laatst bewerkt"
+    "last_edited": "Laatst bewerkt",
+    "unsaved_alert": "Je hebt niet-opgeslagen wijzigen. Weet je zeker dat je weg wilt gaan?"
   }
 }

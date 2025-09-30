@@ -1,6 +1,8 @@
 import colors from "tailwindcss/colors";
 
 export type Id = string;
+export type DateString = string;
+export type DateTimeString = string;
 
 export type TailwindColor = Exclude<
   keyof typeof colors,
@@ -84,6 +86,7 @@ export interface Model {
     list: {
       description: string;
       display: string[];
+      search: boolean;
     };
     edit: {
       main: FormSetGroup[];
@@ -150,6 +153,7 @@ export enum FieldFormat {
   NumberFormat = "NumberFormat",
   FileSizeFormat = "FileSizeFormat",
   TagFormat = "TagFormat",
+  ForeignKeyFormat = "ForeignKeyFormat",
 }
 
 export enum FieldWidget {

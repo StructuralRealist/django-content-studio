@@ -14,6 +14,14 @@ from .token_backends import TokenBackendManager
 register = admin.register
 
 
+class StackedInline(admin.StackedInline):
+    pass
+
+
+class TabularInline(admin.TabularInline):
+    pass
+
+
 class AdminSite(admin.AdminSite):
     """
     Enhanced admin site for Django Content Studio.
@@ -60,6 +68,7 @@ class AdminSite(admin.AdminSite):
         models.DateField: formats.DateFormat,
         models.DateTimeField: formats.DateTimeFormat,
         models.TimeField: formats.TimeFormat,
+        models.ForeignKey: formats.ForeignKeyFormat,
     }
 
     def setup(self):
@@ -164,6 +173,7 @@ class AdminSerializer:
                 "per_page": admin_class.list_per_page,
                 "description": getattr(admin_class, "list_description", ""),
                 "display": admin_class.list_display,
+                "search": len(admin_class.search_fields) > 0,
             },
             "widget_mapping": {
                 field: widget.serialize() for field, widget in widget_mapping.items()

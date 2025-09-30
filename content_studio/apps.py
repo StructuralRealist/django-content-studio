@@ -1,16 +1,10 @@
 from django.apps import AppConfig
 from django.contrib import admin
-from rest_framework import serializers
 from rest_framework.pagination import PageNumberPagination
 
 from . import VERSION
 from .settings import cs_settings
 from .utils import is_runserver
-
-
-class RelatedField(serializers.Field):
-    def to_representation(self, value):
-        return {"id": value.id, "__str__": str(value)}
 
 
 class DjangoContentStudioConfig(AppConfig):
@@ -49,12 +43,11 @@ class DjangoContentStudioConfig(AppConfig):
         from .viewsets import BaseModelViewSet
         from .router import content_studio_router
         from .utils import log
+        from .serializers import ContentSerializer
 
         for _model, admin_model in admin.site._registry.items():
 
-            class Serializer(serializers.ModelSerializer):
-                __str__ = serializers.CharField()
-                serializer_related_field = RelatedField
+            class Serializer(ContentSerializer):
 
                 class Meta:
                     model = _model
@@ -67,6 +60,7 @@ class DjangoContentStudioConfig(AppConfig):
                 serializer_class = Serializer
                 pagination_class = Pagination
                 queryset = _model.objects.all()
+                search_fields = admin_model.search_fields
 
             content_studio_router.register(
                 f"api/content/{_model._meta.label_lower}",
