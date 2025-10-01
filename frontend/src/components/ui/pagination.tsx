@@ -3,20 +3,49 @@ import {
   ChevronRightIcon,
   MoreHorizontalIcon,
 } from "lucide-react";
+import * as R from "ramda";
 import * as React from "react";
+import { Link } from "react-router";
 
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
+function Pagination({
+  className,
+  current,
+  pages,
+  ...props
+}: React.ComponentProps<"nav"> & {
+  current: number;
+  pages: number;
+}) {
   return (
     <nav
       role="navigation"
       aria-label="pagination"
       data-slot="pagination"
-      className={cn("mx-auto flex w-full justify-center", className)}
+      className={cn("flex w-full justify-start", className)}
       {...props}
-    />
+    >
+      <PaginationContent>
+        {current > 1 && (
+          <PaginationPrevious to={{ search: `?page=${current - 1}` }} />
+        )}
+        {R.times(R.add(1), pages).map((page) => (
+          <PaginationItem>
+            <PaginationLink
+              isActive={page === current}
+              to={{ search: `?page=${page}` }}
+            >
+              {page}
+            </PaginationLink>
+          </PaginationItem>
+        ))}
+        {current < pages && (
+          <PaginationNext to={{ search: `?page=${current + 1}` }} />
+        )}
+      </PaginationContent>
+    </nav>
   );
 }
 
@@ -40,7 +69,7 @@ function PaginationItem({ ...props }: React.ComponentProps<"li">) {
 type PaginationLinkProps = {
   isActive?: boolean;
 } & Pick<React.ComponentProps<typeof Button>, "size"> &
-  React.ComponentProps<"a">;
+  React.ComponentProps<typeof Link>;
 
 function PaginationLink({
   className,
@@ -49,7 +78,7 @@ function PaginationLink({
   ...props
 }: PaginationLinkProps) {
   return (
-    <a
+    <Link
       aria-current={isActive ? "page" : undefined}
       data-slot="pagination-link"
       data-active={isActive}

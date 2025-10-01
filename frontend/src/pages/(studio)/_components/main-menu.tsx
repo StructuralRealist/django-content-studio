@@ -36,7 +36,7 @@ export function MainMenu() {
   const [search, setSearch] = useState("");
 
   return (
-    <nav className="w-[240px] shrink-0 flex flex-col max-h-screen bg-stone-50 border-r">
+    <nav className="w-[240px] shrink-0 flex flex-col bg-stone-50 border-r">
       {adminInfo && (
         <div className="flex items-center gap-2 border-b p-3">
           <div className="bg-gradient-to-tl from-stone-900 to-stone-600 size-7 rounded flex items-center justify-center text-white font-black shrink-0">
@@ -56,7 +56,7 @@ export function MainMenu() {
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
-      <div className="flex-1 p-2 space-y-1 overflow-y-auto">
+      <div className="flex-1 p-2 space-y-1 overflow-y-auto scrollbar">
         <MenuItem
           to="/"
           color="slate"

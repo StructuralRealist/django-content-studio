@@ -1,8 +1,8 @@
 from django.apps import AppConfig
 from django.contrib import admin
-from rest_framework.pagination import PageNumberPagination
 
 from . import VERSION
+from .paginators import ContentPagination
 from .settings import cs_settings
 from .utils import is_runserver
 
@@ -45,27 +45,44 @@ class DjangoContentStudioConfig(AppConfig):
         from .utils import log
         from .serializers import ContentSerializer
 
-        for _model, admin_model in admin.site._registry.items():
+        for model, admin_model in admin.site._registry.items():
 
-            class Serializer(ContentSerializer):
-
-                class Meta:
-                    model = _model
-                    fields = "__all__"
-
-            class Pagination(PageNumberPagination):
+            class Pagination(ContentPagination):
                 page_size = admin_model.list_per_page
 
             class ViewSet(BaseModelViewSet):
-                serializer_class = Serializer
+                _model = model
+                _admin_model = admin_model
                 pagination_class = Pagination
                 queryset = _model.objects.all()
-                search_fields = admin_model.search_fields
+                search_fields = list(_admin_model.search_fields).copy()
+
+                def get_serializer_class(self):
+                    if self.action == "list":
+
+                        class Serializer(ContentSerializer):
+
+                            class Meta:
+                                model = self._model
+                                fields = [
+                                    "id",
+                                    "__str__",
+                                ] + self._admin_model.list_display
+
+                    else:
+
+                        class Serializer(ContentSerializer):
+
+                            class Meta:
+                                model = self._model
+                                fields = "__all__"
+
+                    return Serializer
 
             content_studio_router.register(
-                f"api/content/{_model._meta.label_lower}",
+                f"api/content/{model._meta.label_lower}",
                 ViewSet,
-                f"content_studio_api-{_model._meta.label_lower}",
+                f"content_studio_api-{model._meta.label_lower}",
             )
         log(
             ":white_check_mark:",

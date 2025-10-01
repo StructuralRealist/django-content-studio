@@ -9,6 +9,15 @@ export type TailwindColor = Exclude<
   "inherit" | "transparent" | "current" | "black" | "white"
 >;
 
+export interface PaginatedResponse<T> {
+  pagination: {
+    count: number;
+    current: number;
+    pages: number;
+  };
+  results: T[];
+}
+
 export interface AuthState {
   token: string | null;
   setToken(token: string | null): void;
@@ -84,6 +93,7 @@ export interface Model {
     widget_mapping: Record<string, { name: FieldWidget }>;
     icon: string | null;
     list: {
+      per_page: number;
       description: string;
       display: string[];
       search: boolean;

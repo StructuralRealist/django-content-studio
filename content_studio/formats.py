@@ -15,6 +15,10 @@ class ForeignKeyFormat(BaseFormat):
     pass
 
 
+class MediaFormat(BaseFormat):
+    pass
+
+
 class TextFormat(BaseFormat):
     pass
 

@@ -6,6 +6,7 @@ import { AuthGuard, AuthProvider } from "@/auth";
 import { AuthLayout } from "@/pages/(auth)/layout";
 import { LoginPage } from "@/pages/(auth)/login/page";
 import { DashboardPage } from "@/pages/(studio)/(dashboard)/page";
+import { ModelListLayout } from "@/pages/(studio)/content/[model]/layout";
 import { ModelListPage } from "@/pages/(studio)/content/[model]/page";
 import { StudioLayout } from "@/pages/(studio)/layout";
 
@@ -25,7 +26,13 @@ const router = createBrowserRouter([
               },
               {
                 path: "/content/:model",
-                element: <ModelListPage />,
+                element: <ModelListLayout />,
+                children: [
+                  {
+                    path: "",
+                    element: <ModelListPage />,
+                  },
+                ],
               },
             ],
           },

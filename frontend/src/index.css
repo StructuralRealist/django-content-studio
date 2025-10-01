@@ -123,4 +123,28 @@
   body {
     @apply bg-background text-foreground font-sans text-base antialiased;
   }
+  .scrollbar {
+    --scrollbar-foreground: rgba(0, 0, 0, 0.1);
+    --scrollbar-background: transparent;
+    /* Foreground, Background */
+    scrollbar-color: var(--scrollbar-foreground) var(--scrollbar-background);
+    scrollbar-width: thin;
+
+    &::-webkit-scrollbar {
+      width: 4px; /* Mostly for vertical scrollbars */
+      height: 4px; /* Mostly for horizontal scrollbars */
+    }
+    &::-webkit-scrollbar-thumb {
+      /* Foreground */
+      background: var(--scrollbar-foreground);
+      border-radius: 40px;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 0, 0, 0.25);
+    }
+    &::-webkit-scrollbar-track {
+      /* Background */
+      background: var(--scrollbar-background);
+    }
+}
 }

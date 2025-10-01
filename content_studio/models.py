@@ -32,11 +32,11 @@ class ModelSerializer:
             "type": field.__class__.__name__,
         }
 
-        if hasattr(field, "widget"):
-            data["widget"] = field.widget.__name__
+        if hasattr(field, "widget_class"):
+            data["widget_class"] = field.widget_class.__name__
 
-        if hasattr(field, "format"):
-            data["format"] = field.format.__name__
+        if hasattr(field, "format_class"):
+            data["format_class"] = field.format_class.__name__
 
         if field.help_text:
             data["help_text"] = field.help_text
