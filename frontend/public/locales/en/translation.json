@@ -26,5 +26,9 @@
     "title_edit": "Edit {{modelName}}",
     "last_edited": "Last edited",
     "unsaved_alert": "There are unsaved changes. Are you sure you want to leave?"
+  },
+  "media-library": {
+    "title": "Media library",
+    "description": "Manage your media files here."
   }
 }

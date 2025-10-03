@@ -6,22 +6,21 @@ import { DateFormat } from "./date-format";
 import { DatetimeFormat } from "./datetime-format";
 import { FileSizeFormat } from "./file-size-format";
 import { ForeignKeyFormat } from "./foreign-key-format";
+import { MediaFormat } from "./media-format";
 import { TextFormat } from "./text-format";
 import { TimeFormat } from "./time-format";
 
 export function FormatRenderer({
   value,
   field,
-  format,
 }: {
   value: unknown;
   field: ModelField;
-  format?: FieldFormat;
 }) {
   const { data: info } = useAdminInfo();
-  const frmt = format ?? field.format ?? info?.formats[field.type]?.name;
+  const formatClass = field.format_class ?? info?.formats[field.type]?.name;
 
-  switch (frmt) {
+  switch (formatClass) {
     case FieldFormat.FileSizeFormat:
       return <FileSizeFormat value={value} />;
     case FieldFormat.BooleanFormat:
@@ -34,6 +33,8 @@ export function FormatRenderer({
       return <DatetimeFormat value={value} />;
     case FieldFormat.ForeignKeyFormat:
       return <ForeignKeyFormat value={value} />;
+    case FieldFormat.MediaFormat:
+      return <MediaFormat value={value} />;
     default:
       return <TextFormat value={value} />;
   }

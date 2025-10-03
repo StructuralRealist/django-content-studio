@@ -14,6 +14,14 @@ export function useDiscover() {
       const { data } = await http.get<{
         model_groups: ModelGroup[];
         models: Model[];
+        media_library: {
+          enabled: boolean;
+          folders: boolean;
+          models: {
+            media_model: Model | null;
+            folder_model: Model | null;
+          };
+        };
       }>("/discover");
 
       return data;

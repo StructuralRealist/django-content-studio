@@ -92,6 +92,18 @@ class AdminApiViewSet(ViewSet):
             "user_model": settings.AUTH_USER_MODEL,
         }
 
+        media_model = cs_settings.MEDIA_LIBRARY_MODEL
+        folder_model = cs_settings.MEDIA_LIBRARY_FOLDER_MODEL
+
+        data["media_library"] = {
+            "enabled": media_model is not None,
+            "folders": folder_model is not None,
+            "models": {
+                "media_model": ModelSerializer(media_model).serialize(),
+                "folder_model": ModelSerializer(folder_model).serialize(),
+            },
+        }
+
         return Response(data=data)
 
     @action(methods=["get"], detail=False, url_path="me")

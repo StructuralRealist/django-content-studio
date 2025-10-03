@@ -8,19 +8,18 @@ export function WidgetRenderer({
   value,
   onChange,
   field,
-  widget,
   ...props
 }: {
   value: any;
   onChange(value: any): void;
   field: ModelField;
-  widget?: FieldWidget;
 }) {
   const { data: info } = useAdminInfo();
-  const wdgt = widget ?? field.widget ?? info?.widgets[field.type]?.name;
+  const widgetClass = field.widget_class ?? info?.widgets[field.type]?.name;
 
-  switch (wdgt) {
+  switch (widgetClass) {
     case FieldWidget.InputWidget:
+    case FieldWidget.URLPathWidget:
       return (
         <Input
           {...props}

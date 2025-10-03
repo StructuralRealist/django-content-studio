@@ -70,18 +70,22 @@ export function Editor({
   return (
     model && (
       <Form {...form}>
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col overflow-hidden">
           <Header
             model={model}
             resource={resource}
             onSave={() => form.handleSubmit(onSubmit)()}
           />
-          <div className="flex gap-8 p-5">
+          <div className="flex flex-1 overflow-y-auto">
             <div className="flex-1">
-              <Main model={model} />
+              <div className="p-5">
+                <Main model={model} />
+              </div>
             </div>
             <div className="w-full max-w-[360px]">
-              <Aside model={model} />
+              <div className="p-5">
+                <Aside model={model} />
+              </div>
             </div>
           </div>
         </div>

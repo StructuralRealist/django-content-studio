@@ -115,8 +115,8 @@ export interface ModelField {
   primary_key?: boolean;
   max_length?: number;
   help_text?: string;
-  widget?: FieldWidget;
-  format?: FieldFormat;
+  widget_class?: FieldWidget;
+  format_class?: FieldFormat;
 }
 
 export interface Resource {
@@ -164,6 +164,7 @@ export enum FieldFormat {
   FileSizeFormat = "FileSizeFormat",
   TagFormat = "TagFormat",
   ForeignKeyFormat = "ForeignKeyFormat",
+  MediaFormat = "MediaFormat",
 }
 
 export enum FieldWidget {

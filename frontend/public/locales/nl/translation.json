@@ -26,5 +26,9 @@
     "title_edit": "Bewerk {{modelName}}",
     "last_edited": "Laatst bewerkt",
     "unsaved_alert": "Je hebt niet-opgeslagen wijzigen. Weet je zeker dat je weg wilt gaan?"
+  },
+  "media-library": {
+    "title": "Mediabibliotheek",
+    "description": "Beheer je media-bestanden hier."
   }
 }

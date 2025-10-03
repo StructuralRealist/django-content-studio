@@ -29,6 +29,8 @@ DEFAULTS = {
     "EDITED_AT_ATTR": "edited_at",
     "CREATED_BY_ATTR": "created_by",
     "CREATED_AT_ATTR": "created_at",
+    "MEDIA_LIBRARY_MODEL": None,
+    "MEDIA_LIBRARY_FOLDER_MODEL": None,
 }
 
 
@@ -36,6 +38,8 @@ DEFAULTS = {
 IMPORT_STRINGS = [
     "ADMIN_SITE",
     "LOGIN_BACKENDS",
+    "MEDIA_LIBRARY_MODEL",
+    "MEDIA_LIBRARY_FOLDER_MODEL",
 ]
 
 

@@ -63,12 +63,14 @@ export function MainMenu() {
           icon={<PiHouseSimpleBold />}
           label={t("main_menu.dashboard")}
         />
-        <MenuItem
-          to="/media"
-          color="pink"
-          icon={<PiImageBold />}
-          label={t("main_menu.media_library")}
-        />
+        {discover?.media_library.enabled && (
+          <MenuItem
+            to="/media-library"
+            color="pink"
+            icon={<PiImageBold />}
+            label={t("main_menu.media_library")}
+          />
+        )}
 
         <div className="h-4" role="separator" />
 

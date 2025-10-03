@@ -9,6 +9,7 @@ import { DashboardPage } from "@/pages/(studio)/(dashboard)/page";
 import { ModelListLayout } from "@/pages/(studio)/content/[model]/layout";
 import { ModelListPage } from "@/pages/(studio)/content/[model]/page";
 import { StudioLayout } from "@/pages/(studio)/layout";
+import { MediaLibraryPage } from "@/pages/(studio)/media-library/[model]/page";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
               {
                 path: "",
                 element: <DashboardPage />,
+              },
+              {
+                path: "/media-library",
+                element: <MediaLibraryPage />,
               },
               {
                 path: "/content/:model",

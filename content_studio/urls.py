@@ -1,9 +1,13 @@
 from django.urls import re_path
 
+from .media_library.viewsets import MediaLibraryViewSet
 from .router import content_studio_router
 from .views import ContentStudioWebAppView, AdminApiViewSet
 
 content_studio_router.register("api", AdminApiViewSet, "content_studio_admin")
+content_studio_router.register(
+    "api/media-library", MediaLibraryViewSet, "content_studio_media_library"
+)
 
 urlpatterns = [
     re_path(
