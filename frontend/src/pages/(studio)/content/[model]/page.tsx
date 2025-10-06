@@ -25,7 +25,7 @@ export function ModelListPage() {
   const { data: discover } = useDiscover();
   const model = discover?.models.find(R.whereEq({ label: appLabel }));
   const [view, setView] = useState<"list" | "grid">("list");
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const page = Number(searchParams.get("page") ?? "1");
   const [filters, setFilters] = useState<{ search: string }>({
     search: "",
@@ -94,6 +94,12 @@ export function ModelListPage() {
         <Pagination
           current={data.pagination.current}
           pages={data.pagination.pages}
+          onPageChange={(page) =>
+            setSearchParams((searchParams) => {
+              searchParams.set("page", `${page}`);
+              return searchParams;
+            })
+          }
         />
       </div>
     </div>

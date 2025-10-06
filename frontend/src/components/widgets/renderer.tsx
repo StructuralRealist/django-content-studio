@@ -1,8 +1,9 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { useAdminInfo } from "@/hooks/use-admin-info";
 import { FieldWidget, type ModelField } from "@/types";
+
+import { RichTextField } from "./rich-text";
 
 export function WidgetRenderer({
   value,
@@ -28,9 +29,7 @@ export function WidgetRenderer({
         />
       );
     case FieldWidget.RichTextWidget:
-      return (
-        <Textarea value={value} onChange={(e) => onChange(e.target.value)} />
-      );
+      return <RichTextField value={value} onChange={onChange} />;
     case FieldWidget.CheckboxWidget:
       return <Checkbox checked={value} onCheckedChange={onChange} />;
     default:

@@ -76,8 +76,8 @@ export function Editor({
             resource={resource}
             onSave={() => form.handleSubmit(onSubmit)()}
           />
-          <div className="flex flex-1 overflow-y-auto">
-            <div className="flex-1">
+          <div className="flex flex-1 justify-center overflow-y-auto">
+            <div className="w-full max-w-3xl">
               <div className="p-5">
                 <Main model={model} />
               </div>

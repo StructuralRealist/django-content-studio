@@ -2,7 +2,8 @@
   "common": {
     "search": "Search",
     "save": "Save",
-    "create": "Create"
+    "create": "Create",
+    "cancel": "Cancel"
   },
   "login": {
     "title": "Welcome back",
@@ -31,5 +32,19 @@
     "title": "Media library",
     "description": "Manage your media files here.",
     "new_folder": "New folder"
+  },
+  "widgets": {
+     "heading1": "Heading 1",
+      "heading2": "Heading 2",
+      "heading3": "Heading 3",
+      "heading4": "Heading 4",
+      "heading5": "Heading 5",
+      "heading6": "Heading 6",
+      "paragraph": "Paragraph",
+      "blockquote": "Blockquote",
+      "codeBlock": "Code block",
+      "set_link": "Add link",
+      "update_link": "Edit link",
+      "remove_link": "Remove link"
   }
 }

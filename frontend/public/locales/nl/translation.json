@@ -2,7 +2,8 @@
   "common": {
     "search": "Zoeken",
     "save": "Opslaan",
-    "create": "Maak aan"
+    "create": "Maak aan",
+    "cancel": "Annuleren"
   },
   "login": {
     "title": "Welkom terug",
@@ -31,5 +32,21 @@
     "title": "Mediabibliotheek",
     "description": "Beheer je media-bestanden hier.",
     "new_folder": "Nieuwe map"
+  },
+  "widgets": {
+    "rich_text_editor": {
+        "heading1": "Kop 1",
+        "heading2": "Kop 2",
+        "heading3": "Kop 3",
+        "heading4": "Kop 4",
+        "heading5": "Kop 5",
+        "heading6": "Kop 6",
+        "paragraph": "Paragraaf",
+        "blockquote": "Citaat",
+        "codeBlock": "Codeblok",
+        "set_link": "Voeg link toe",
+        "update_link": "Bewerk link",
+        "remove_link": "Verwijder link"
+    }
   }
 }
