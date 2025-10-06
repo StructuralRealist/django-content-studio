@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { PiArrowLeft, PiDotsThreeBold } from "react-icons/pi";
+import { useNavigate } from "react-router";
 
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -12,12 +13,15 @@ export function Header({
   model,
   resource,
   onSave,
+  isSaving,
 }: {
   model: Model;
   resource?: Resource;
-  onSave: VoidFunction;
+  onSave(): Promise<void>;
+  isSaving: boolean;
 }) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { data: info } = useAdminInfo();
   const form = useFormContext();
   const isCreate = !resource?.id;
@@ -35,6 +39,7 @@ export function Header({
             <Button
               variant="outline"
               size="icon"
+              disabled={isSaving}
               onClick={(e) => {
                 if (isDirty && !confirm(t("editor.unsaved_alert"))) {
                   e.preventDefault();
@@ -58,7 +63,15 @@ export function Header({
                 {`${t("editor.last_edited")} ${dayjs(editedAt).fromNow()}`}
               </div>
             ) : null}
-            <Button onClick={() => onSave()}>
+            <Button
+              onClick={async () => {
+                try {
+                  await onSave();
+                  navigate({ hash: "" });
+                } catch (e) {}
+              }}
+              isLoading={isSaving}
+            >
               {t(isCreate ? "common.create" : "common.save")}
             </Button>
             <Button size="icon" variant="ghost">

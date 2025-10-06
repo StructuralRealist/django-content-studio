@@ -12,7 +12,7 @@ class ContentRelatedField(RelatedField):
 
 
 class ContentSerializer(serializers.ModelSerializer):
-    __str__ = serializers.CharField()
+    __str__ = serializers.CharField(read_only=True)
     serializer_related_field = ContentRelatedField
 
 

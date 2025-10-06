@@ -1,13 +1,15 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import * as R from "ramda";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   PiFileTextBold,
   PiGridNineBold,
   PiListBulletsBold,
 } from "react-icons/pi";
-import { useParams, useSearchParams } from "react-router";
+import { Link, useParams, useSearchParams } from "react-router";
 
+import { buttonVariants } from "@/components/ui/button.tsx";
 import { Pagination } from "@/components/ui/pagination";
 import { Spinner } from "@/components/ui/spinner";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
@@ -20,6 +22,7 @@ import { Filters } from "./_components/filters";
 import { ListView } from "./_components/list-view";
 
 export function ModelListPage() {
+  const { t } = useTranslation();
   const { model: appLabel } = useParams<{ model: string }>();
   const http = useHttp();
   const { data: discover } = useDiscover();
@@ -60,7 +63,7 @@ export function ModelListPage() {
         ) : (
           <PiFileTextBold />
         )}
-        <div>
+        <div className="select-none">
           <h1 className="text-xl/tight font-semibold">
             {model.verbose_name_plural}
           </h1>
@@ -70,6 +73,12 @@ export function ModelListPage() {
             </div>
           )}
         </div>
+        <Link
+          to={{ hash: `editor:${model.label}` }}
+          className={buttonVariants()}
+        >
+          {t("common.create")}
+        </Link>
       </div>
 
       <div className="flex items-center justify-between mb-8">

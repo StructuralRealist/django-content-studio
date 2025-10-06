@@ -25,10 +25,10 @@ export function Editor({
   const { data: discover } = useDiscover();
   const model = discover?.models.find(R.whereEq({ label: modelLabel }));
   const formSchema = z.looseObject({
-    id: z.string().readonly(),
-    __str__: z.string().readonly(),
+    id: z.string().readonly().optional(),
+    __str__: z.string().readonly().optional(),
   });
-  const form = useForm<Resource>({
+  const form = useForm<Partial<Resource>>({
     resolver: zodResolver(formSchema),
     mode: "onChange",
     defaultValues: Object.entries(model?.fields ?? {}).reduce(
@@ -49,8 +49,8 @@ export function Editor({
     },
   });
 
-  const { mutate: save } = useMutation({
-    async mutationFn(values: Resource) {
+  const { mutateAsync: save, isPending } = useMutation({
+    async mutationFn(values: Partial<Resource>) {
       await http[id ? "put" : "post"](
         `/content/${modelLabel}${id ? `/${id}` : ""}`,
         values,
@@ -63,8 +63,8 @@ export function Editor({
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    save(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    await save(values);
   }
 
   return (
@@ -74,6 +74,7 @@ export function Editor({
           <Header
             model={model}
             resource={resource}
+            isSaving={isPending}
             onSave={() => form.handleSubmit(onSubmit)()}
           />
           <div className="flex flex-1 justify-center overflow-y-auto">
