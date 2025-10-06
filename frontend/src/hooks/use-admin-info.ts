@@ -8,6 +8,7 @@ export function useAdminInfo() {
 
   return useQuery({
     retry: false,
+    staleTime: Infinity,
     queryKey: ["admin-info"],
     async queryFn() {
       const { data } = await http.get<AdminInfo>("/info");

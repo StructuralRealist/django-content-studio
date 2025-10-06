@@ -102,6 +102,12 @@ export interface Model {
       main: FormSetGroup[];
       sidebar: FormSet[];
     };
+    permissions: {
+      add_permission: boolean;
+      change_permission: boolean;
+      delete_permission: boolean;
+      view_permission: boolean;
+    };
   };
   fields: Record<string, ModelField>;
 }

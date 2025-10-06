@@ -29,6 +29,7 @@
   },
   "media-library": {
     "title": "Mediabibliotheek",
-    "description": "Beheer je media-bestanden hier."
+    "description": "Beheer je media-bestanden hier.",
+    "new_folder": "Nieuwe map"
   }
 }

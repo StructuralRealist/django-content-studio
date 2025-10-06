@@ -29,6 +29,7 @@
   },
   "media-library": {
     "title": "Media library",
-    "description": "Manage your media files here."
+    "description": "Manage your media files here.",
+    "new_folder": "New folder"
   }
 }
