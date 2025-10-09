@@ -1,5 +1,6 @@
 from django.apps import AppConfig
 from django.contrib import admin
+from django.core.exceptions import ImproperlyConfigured
 
 from . import VERSION
 from .paginators import ContentPagination
@@ -40,52 +41,62 @@ class DjangoContentStudioConfig(AppConfig):
             log("\n")
 
     def _create_crud_api(self):
-        from .viewsets import BaseModelViewSet
-        from .router import content_studio_router
         from .utils import log
-        from .serializers import ContentSerializer
 
         for model, admin_model in admin.site._registry.items():
+            self._create_view_set(model, admin_model)
+            for inline in admin_model.inlines:
+                self._create_view_set(model=inline.model, admin_model=inline)
 
-            class Pagination(ContentPagination):
-                page_size = admin_model.list_per_page
+        log(
+            ":white_check_mark:",
+            f"[green]Created CRUD API[/green]",
+        )
 
-            class ViewSet(BaseModelViewSet):
-                _model = model
-                _admin_model = admin_model
-                is_singleton = getattr(admin_model, "is_singleton", False)
-                pagination_class = Pagination
-                queryset = _model.objects.all()
-                search_fields = list(_admin_model.search_fields).copy()
+    def _create_view_set(self, model, admin_model):
+        from .viewsets import BaseModelViewSet
+        from .router import content_studio_router
+        from .serializers import ContentSerializer
 
-                def get_serializer_class(self):
-                    if self.action == "list" and not self.is_singleton:
+        class Pagination(ContentPagination):
+            page_size = getattr(admin_model, "list_per_page", 10)
 
-                        class Serializer(ContentSerializer):
+        class ViewSet(BaseModelViewSet):
+            _model = model
+            _admin_model = admin_model
+            is_singleton = getattr(admin_model, "is_singleton", False)
+            pagination_class = Pagination
+            queryset = _model.objects.all()
+            search_fields = list(getattr(_admin_model, "search_fields", []))
 
-                            class Meta:
-                                model = self._model
-                                fields = [
-                                    "id",
-                                    "__str__",
-                                ] + list(self._admin_model.list_display)
+            def get_serializer_class(self):
+                if self.action == "list" and not self.is_singleton:
 
-                    else:
+                    class Serializer(ContentSerializer):
 
-                        class Serializer(ContentSerializer):
+                        class Meta:
+                            model = self._model
+                            fields = [
+                                "id",
+                                "__str__",
+                            ] + list(self._admin_model.list_display)
 
-                            class Meta:
-                                model = self._model
-                                fields = "__all__"
+                else:
 
-                    return Serializer
+                    class Serializer(ContentSerializer):
 
+                        class Meta:
+                            model = self._model
+                            fields = "__all__"
+
+                return Serializer
+
+        try:
             content_studio_router.register(
                 f"api/content/{model._meta.label_lower}",
                 ViewSet,
                 f"content_studio_api-{model._meta.label_lower}",
             )
-        log(
-            ":white_check_mark:",
-            f"[green]Created CRUD API[/green]",
-        )
+        except ImproperlyConfigured:
+            # It's possible that inline models are already registered.
+            pass
