@@ -89,6 +89,7 @@ export interface Model {
   verbose_name: string;
   verbose_name_plural: string;
   admin: {
+    is_singleton: boolean;
     format_mapping: Record<string, { name: FieldFormat }>;
     widget_mapping: Record<string, { name: FieldWidget }>;
     icon: string | null;

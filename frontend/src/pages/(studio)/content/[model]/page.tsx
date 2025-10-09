@@ -73,12 +73,14 @@ export function ModelListPage() {
             </div>
           )}
         </div>
-        <Link
-          to={{ hash: `editor:${model.label}` }}
-          className={buttonVariants()}
-        >
-          {t("common.create")}
-        </Link>
+        {model.admin.permissions.add_permission && (
+          <Link
+            to={{ hash: `editor:${model.label}` }}
+            className={buttonVariants()}
+          >
+            {t("common.create")}
+          </Link>
+        )}
       </div>
 
       <div className="flex items-center justify-between mb-8">

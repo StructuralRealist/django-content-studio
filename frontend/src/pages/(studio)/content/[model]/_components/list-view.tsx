@@ -1,3 +1,4 @@
+import * as R from "ramda";
 import { useNavigate } from "react-router";
 
 import { FormatRenderer } from "@/components/formats/renderer";
@@ -40,15 +41,16 @@ export function ListView({
                 navigate({ hash: `#editor:${model.label}:${item.id}` })
               }
             >
-              {model.admin.list.display.map((field) => (
-                <TableCell key={field}>
-                  <FormatRenderer
-                    value={item[field]}
-                    field={model.fields[field]}
-                    format={model.admin.format_mapping?.[field]?.name}
-                  />
-                </TableCell>
-              ))}
+              {model.admin.list.display
+                .filter((field) => !R.isNil(model.fields[field]))
+                .map((field) => (
+                  <TableCell key={field}>
+                    <FormatRenderer
+                      value={item[field]}
+                      field={model.fields[field]}
+                    />
+                  </TableCell>
+                ))}
             </TableRow>
           ))}
         </TableBody>

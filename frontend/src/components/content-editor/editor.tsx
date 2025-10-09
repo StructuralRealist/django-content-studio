@@ -24,6 +24,7 @@ export function Editor({
   const http = useHttp();
   const { data: discover } = useDiscover();
   const model = discover?.models.find(R.whereEq({ label: modelLabel }));
+  const isSingleton = model?.admin.is_singleton ?? false;
   const formSchema = z.looseObject({
     id: z.string().readonly().optional(),
     __str__: z.string().readonly().optional(),
@@ -38,11 +39,13 @@ export function Editor({
   });
 
   const { data: resource } = useQuery({
-    enabled: !R.isNil(id),
+    enabled: !R.isNil(id) || isSingleton,
     retry: false,
-    queryKey: ["resources", modelLabel, id],
+    queryKey: ["resources", modelLabel, id || isSingleton],
     async queryFn() {
-      const { data } = await http.get(`/content/${modelLabel}/${id}`);
+      const { data } = await http.get(
+        `/content/${modelLabel}${isSingleton ? "" : `/${id}`}`,
+      );
       form.reset(data);
 
       return data;
@@ -51,8 +54,8 @@ export function Editor({
 
   const { mutateAsync: save, isPending } = useMutation({
     async mutationFn(values: Partial<Resource>) {
-      await http[id ? "put" : "post"](
-        `/content/${modelLabel}${id ? `/${id}` : ""}`,
+      await http[values.id ? "put" : "post"](
+        `/content/${modelLabel}${values.id ? `/${values.id}` : ""}`,
         values,
       );
     },

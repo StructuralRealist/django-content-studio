@@ -1,6 +1,6 @@
 from django.contrib.admin.models import LogEntry, ADDITION, CHANGE, DELETION
 from django.contrib.contenttypes.models import ContentType
-from rest_framework.exceptions import MethodNotAllowed, NotFound
+from rest_framework.exceptions import NotFound
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.parsers import JSONParser
 from rest_framework.permissions import DjangoModelPermissions
@@ -12,6 +12,7 @@ from .settings import cs_settings
 
 class BaseModelViewSet(ModelViewSet):
     lookup_field = "id"
+    is_singleton = False
     parser_classes = [JSONParser]
     renderer_classes = [JSONRenderer]
     permission_classes = [DjangoModelPermissions]
@@ -24,32 +25,6 @@ class BaseModelViewSet(ModelViewSet):
         self.authentication_classes = [
             admin_site.token_backend.active_backend.authentication_class
         ]
-
-    def retrieve(self, request, *args, **kwargs):
-        """
-        Disable this endpoint for singletons. They should use
-        the list endpoint instead.
-        """
-        if self.is_singleton:
-            raise MethodNotAllowed(
-                method="GET",
-                detail="Singleton objects do not support the retrieve endpoint.",
-            )
-
-        return super().retrieve(request, *args, **kwargs)
-
-    def update(self, request, *args, **kwargs):
-        """
-        We overwrite the update method to support singletons. If a singleton
-        doesn't exist it will be created.
-        """
-        if self.is_singleton:
-            try:
-                super().update(request, *args, **kwargs)
-            except NotFound:
-                self.create(request, *args, **kwargs)
-
-        return super().update(request, *args, **kwargs)
 
     def list(self, request, *args, **kwargs):
         """
@@ -114,13 +89,11 @@ class BaseModelViewSet(ModelViewSet):
         If a singleton doesn't exist it will raise a NotFound exception.
         """
         if self.is_singleton:
-            try:
-                return self.get_queryset().get()
-            except self.queryset.model.DoesNotExist:
+            singleton = self.get_queryset().first()
+
+            if singleton:
+                return singleton
+            else:
                 raise NotFound()
 
         return super().get_object()
-
-    @property
-    def is_singleton(self):
-        return getattr(self.get_queryset().model, "is_singleton", False)

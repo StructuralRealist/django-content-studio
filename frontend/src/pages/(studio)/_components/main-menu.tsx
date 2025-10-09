@@ -10,7 +10,7 @@ import {
   PiNutBold,
   PiSignOut,
 } from "react-icons/pi";
-import { Link, useNavigate } from "react-router";
+import { Link, type Path, useNavigate } from "react-router";
 
 import { useAuth } from "@/auth";
 import {
@@ -88,7 +88,11 @@ export function MainMenu() {
                 return model ? (
                   <MenuItem
                     key={label}
-                    to={`/content/${model.label}`}
+                    to={
+                      model.admin.is_singleton
+                        ? { hash: `editor:${model.label}` }
+                        : `/content/${model.label}`
+                    }
                     label={model.verbose_name_plural}
                     icon={model.admin.icon ?? <PiFileTextBold />}
                   />
@@ -175,7 +179,7 @@ function MenuItem({
 }: {
   label: string;
   icon?: React.ReactNode | string;
-  to?: string;
+  to?: Partial<Path> | string;
   color?: TailwindColor;
   children?: React.ReactElement[];
 }) {

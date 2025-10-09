@@ -53,12 +53,13 @@ class DjangoContentStudioConfig(AppConfig):
             class ViewSet(BaseModelViewSet):
                 _model = model
                 _admin_model = admin_model
+                is_singleton = getattr(admin_model, "is_singleton", False)
                 pagination_class = Pagination
                 queryset = _model.objects.all()
                 search_fields = list(_admin_model.search_fields).copy()
 
                 def get_serializer_class(self):
-                    if self.action == "list":
+                    if self.action == "list" and not self.is_singleton:
 
                         class Serializer(ContentSerializer):
 
@@ -67,7 +68,7 @@ class DjangoContentStudioConfig(AppConfig):
                                 fields = [
                                     "id",
                                     "__str__",
-                                ] + self._admin_model.list_display
+                                ] + list(self._admin_model.list_display)
 
                     else:
 

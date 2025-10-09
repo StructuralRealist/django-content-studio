@@ -90,6 +90,10 @@ class ModelAdmin(admin.ModelAdmin):
     some default behavior has been changed.
     """
 
+    # Whether the model is a singleton and should not show
+    # the list view.
+    is_singleton = False
+
     # Override the widget used for certain fields by adding
     # a map of field to widget. Fields that are not included
     # will fall back to their default widget.
@@ -165,6 +169,7 @@ class AdminSerializer:
 
         return {
             "icon": getattr(admin_class, "icon", None),
+            "is_singleton": getattr(admin_class, "is_singleton", False),
             "edit": {
                 "main": self.serialize_edit_main(request),
                 "sidebar": self.serialize_edit_sidebar(request),
