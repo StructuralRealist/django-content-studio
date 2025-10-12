@@ -173,6 +173,13 @@ class AdminSerializer:
             "edit": {
                 "main": self.serialize_edit_main(request),
                 "sidebar": self.serialize_edit_sidebar(request),
+                "inlines": [
+                    {
+                        "model": inline.model._meta.label_lower,
+                        "fields": inline.fields,
+                    }
+                    for inline in admin_class.inlines
+                ],
             },
             "list": {
                 "per_page": admin_class.list_per_page,

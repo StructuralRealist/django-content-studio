@@ -129,6 +129,13 @@ def get_models(request):
                 "admin": AdminSerializer(admin_class).serialize(request),
             }
         )
+        for inline in admin_class.inlines:
+            if inline.model not in registered_models:
+                models.append(
+                    {
+                        **ModelSerializer(inline.model).serialize(),
+                    }
+                )
 
     return models
 

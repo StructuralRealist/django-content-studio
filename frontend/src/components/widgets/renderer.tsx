@@ -1,9 +1,12 @@
+import * as R from "ramda";
+
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
+import { SelectWidget } from "@/components/widgets/select-widget.tsx";
 import { useAdminInfo } from "@/hooks/use-admin-info";
-import { FieldWidget, type ModelField } from "@/types";
+import { FieldType, FieldWidget, type ModelField } from "@/types";
 
-import { RichTextField } from "./rich-text";
+import { RichTextWidget } from "./rich-text-widget";
 
 export function WidgetRenderer({
   value,
@@ -16,7 +19,13 @@ export function WidgetRenderer({
   field: ModelField;
 }) {
   const { data: info } = useAdminInfo();
-  const widgetClass = field.widget_class ?? info?.widgets[field.type]?.name;
+  const widgetClass = R.cond([
+    [
+      () => field.type === FieldType.CharField && !R.isNil(field.choices),
+      R.always(FieldWidget.SelectWidget),
+    ],
+    [R.T, R.identity],
+  ])(field.widget_class ?? info?.widgets[field.type]?.name);
 
   switch (widgetClass) {
     case FieldWidget.InputWidget:
@@ -29,7 +38,15 @@ export function WidgetRenderer({
         />
       );
     case FieldWidget.RichTextWidget:
-      return <RichTextField value={value} onChange={onChange} />;
+      return <RichTextWidget value={value} onChange={onChange} />;
+    case FieldWidget.SelectWidget:
+      return (
+        <SelectWidget
+          choices={field.choices}
+          value={value}
+          onChange={onChange}
+        />
+      );
     case FieldWidget.CheckboxWidget:
       return <Checkbox checked={value} onCheckedChange={onChange} />;
     default:

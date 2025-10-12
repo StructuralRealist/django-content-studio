@@ -23,7 +23,7 @@ const extensions = [
   }),
 ];
 
-export function RichTextField({ value, onChange, disabled }: RichtTextProps) {
+export function RichTextWidget({ value, onChange, disabled }: RichtTextProps) {
   const editor = useEditor({
     extensions,
     content: value,
@@ -43,7 +43,7 @@ export function RichTextField({ value, onChange, disabled }: RichtTextProps) {
    */
   useEffect(() => {
     if (value !== editor.getHTML()) {
-      editor.commands.setContent(value);
+      editor.commands.setContent(value ?? "");
     }
   }, [value, editor]);
 

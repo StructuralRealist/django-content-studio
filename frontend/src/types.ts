@@ -115,6 +115,7 @@ export interface Model {
 
 export interface ModelField {
   type: FieldType;
+  choices?: string[][];
   required?: boolean;
   verbose_name?: string;
   readonly?: boolean;
