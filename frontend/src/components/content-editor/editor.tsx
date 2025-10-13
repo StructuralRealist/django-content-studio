@@ -83,7 +83,7 @@ export function Editor({
           <div className="flex flex-1 justify-center overflow-y-auto">
             <div className="w-full max-w-3xl">
               <div className="p-5">
-                <Main model={model} />
+                <Main model={model} id={id} />
               </div>
             </div>
             <div className="w-full max-w-[360px]">

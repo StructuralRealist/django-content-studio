@@ -3,7 +3,8 @@
     "search": "Search",
     "save": "Save",
     "create": "Create",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "general": "General"
   },
   "login": {
     "title": "Welcome back",

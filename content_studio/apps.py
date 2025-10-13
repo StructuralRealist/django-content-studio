@@ -46,14 +46,16 @@ class DjangoContentStudioConfig(AppConfig):
         for model, admin_model in admin.site._registry.items():
             self._create_view_set(model, admin_model)
             for inline in admin_model.inlines:
-                self._create_view_set(model=inline.model, admin_model=inline)
+                self._create_view_set(
+                    model=inline.model, admin_model=inline, inline=True
+                )
 
         log(
             ":white_check_mark:",
             f"[green]Created CRUD API[/green]",
         )
 
-    def _create_view_set(self, model, admin_model):
+    def _create_view_set(self, model, admin_model, inline=False):
         from .viewsets import BaseModelViewSet
         from .router import content_studio_router
         from .serializers import ContentSerializer
@@ -70,24 +72,27 @@ class DjangoContentStudioConfig(AppConfig):
             search_fields = list(getattr(_admin_model, "search_fields", []))
 
             def get_serializer_class(self):
-                if self.action == "list" and not self.is_singleton:
-
-                    class Serializer(ContentSerializer):
-
-                        class Meta:
-                            model = self._model
-                            fields = [
-                                "id",
-                                "__str__",
-                            ] + list(self._admin_model.list_display)
-
+                # For inline admin models we include the specified fields.
+                if inline:
+                    available_fields = [
+                        "id",
+                        "__str__",
+                    ] + list(getattr(self._admin_model, "fields", []) or [])
+                # For list views we include the specified list_display fields.
+                elif self.action == "list" and not self.is_singleton:
+                    available_fields = [
+                        "id",
+                        "__str__",
+                    ] + list(getattr(self._admin_model, "list_display", []))
+                # In all other cases we include all fields.
                 else:
+                    available_fields = "__all__"
 
-                    class Serializer(ContentSerializer):
+                class Serializer(ContentSerializer):
 
-                        class Meta:
-                            model = self._model
-                            fields = "__all__"
+                    class Meta:
+                        model = self._model
+                        fields = available_fields
 
                 return Serializer
 

@@ -14,7 +14,7 @@ export function Aside({ model }: { model: Model }) {
 
   return (
     hasSidebar && (
-      <aside>
+      <aside className="space-y-4">
         {sidebar.map((formSet, idx) => (
           <section key={idx} className="border rounded-lg p-4 w-full">
             <FormSet model={model} formSet={formSet} />

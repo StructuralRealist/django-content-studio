@@ -2,6 +2,7 @@ import * as R from "ramda";
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea.tsx";
 import { SelectWidget } from "@/components/widgets/select-widget.tsx";
 import { useAdminInfo } from "@/hooks/use-admin-info";
 import { FieldType, FieldWidget, type ModelField } from "@/types";
@@ -20,6 +21,7 @@ export function WidgetRenderer({
 }) {
   const { data: info } = useAdminInfo();
   const widgetClass = R.cond([
+    [R.isNil, R.always(null)],
     [
       () => field.type === FieldType.CharField && !R.isNil(field.choices),
       R.always(FieldWidget.SelectWidget),
@@ -42,13 +44,17 @@ export function WidgetRenderer({
     case FieldWidget.SelectWidget:
       return (
         <SelectWidget
-          choices={field.choices}
+          choices={field.choices ?? []}
           value={value}
           onChange={onChange}
         />
       );
     case FieldWidget.CheckboxWidget:
       return <Checkbox checked={value} onCheckedChange={onChange} />;
+    case FieldWidget.TextAreaWidget:
+      return (
+        <Textarea value={value} onChange={(e) => onChange(e.target.value)} />
+      );
     default:
       return (
         <Input readOnly value={value ? value.__str__ || String(value) : ""} />

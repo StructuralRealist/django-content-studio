@@ -10,6 +10,7 @@ from .dashboard import Dashboard
 from .form import FormSet, FormSetGroup
 from .login_backends import LoginBackendManager
 from .token_backends import TokenBackendManager
+from .utils import get_related_field_name
 
 register = admin.register
 
@@ -176,6 +177,7 @@ class AdminSerializer:
                 "inlines": [
                     {
                         "model": inline.model._meta.label_lower,
+                        "fk_name": get_related_field_name(inline, admin_class.model),
                         "fields": inline.fields,
                     }
                     for inline in admin_class.inlines
