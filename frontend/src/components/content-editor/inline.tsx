@@ -1,8 +1,9 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
-import { FormatRenderer } from "@/components/formats/renderer.tsx";
-import { Pagination } from "@/components/ui/pagination.tsx";
+import { FormatRenderer } from "@/components/formats/renderer";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Pagination } from "@/components/ui/pagination";
 import {
   Table,
   TableBody,
@@ -12,7 +13,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useHttp } from "@/hooks/use-http";
+import { cn } from "@/lib/utils.ts";
 import type { Id, Model, PaginatedResponse, Resource } from "@/types";
+
+import { Editor } from "./editor";
 
 export function Inline({
   relId,
@@ -28,6 +32,7 @@ export function Inline({
 }) {
   const http = useHttp();
   const [page, setPage] = useState(1);
+  const readOnly = !model.admin;
   const { data } = useQuery({
     retry: false,
     refetchOnWindowFocus: true,
@@ -60,16 +65,32 @@ export function Inline({
           </TableHeader>
           <TableBody>
             {data?.results.map((resource) => (
-              <TableRow key={resource.id}>
-                {adminModel.fields?.map((field) => (
-                  <TableCell key={field}>
-                    <FormatRenderer
-                      value={resource[field]}
-                      field={model.fields[field]}
-                    />
-                  </TableCell>
-                ))}
-              </TableRow>
+              <Dialog key={resource.id}>
+                {!readOnly && (
+                  <DialogContent
+                    className="p-0 sm:max-w-5xl"
+                    showCloseButton={false}
+                  >
+                    <Editor modelLabel={model.label} id={resource.id} />
+                  </DialogContent>
+                )}
+                <DialogTrigger asChild>
+                  <TableRow
+                    className={cn({
+                      "hover:bg-transparent": readOnly,
+                    })}
+                  >
+                    {adminModel.fields?.map((field) => (
+                      <TableCell key={field}>
+                        <FormatRenderer
+                          value={resource[field]}
+                          field={model.fields[field]}
+                        />
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </DialogTrigger>
+              </Dialog>
             ))}
           </TableBody>
         </Table>

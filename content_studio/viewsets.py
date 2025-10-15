@@ -7,6 +7,7 @@ from rest_framework.permissions import DjangoModelPermissions
 from rest_framework.renderers import JSONRenderer
 from rest_framework.viewsets import ModelViewSet
 
+from .filters import LookupFilter
 from .settings import cs_settings
 
 
@@ -16,7 +17,7 @@ class BaseModelViewSet(ModelViewSet):
     parser_classes = [JSONParser]
     renderer_classes = [JSONRenderer]
     permission_classes = [DjangoModelPermissions]
-    filter_backends = [SearchFilter, OrderingFilter]
+    filter_backends = [SearchFilter, OrderingFilter, LookupFilter]
 
     def __init__(self, *args, **kwargs):
         super(BaseModelViewSet, self).__init__()

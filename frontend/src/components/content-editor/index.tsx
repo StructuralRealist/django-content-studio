@@ -20,6 +20,7 @@ export function ContentEditor() {
     >
       <DialogContent
         showCloseButton={false}
+        onEscapeKeyDown={(e) => e.preventDefault()}
         className="sm:max-w-none w-screen h-screen rounded-none p-0"
         onOpenAutoFocus={(e) => e.preventDefault()}
       >

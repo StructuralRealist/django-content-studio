@@ -10,6 +10,10 @@ def log(*args, **kwargs):
     console.print(*args, **kwargs)
 
 
+def flatten(xss):
+    return [x for xs in xss for x in xs]
+
+
 def is_runserver():
     """
     Checks if the Django application is started as a server.

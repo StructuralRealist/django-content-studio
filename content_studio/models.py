@@ -18,7 +18,12 @@ class ModelSerializer:
         }
 
     def get_fields(self):
-        fields = {}
+        fields = {
+            "__str__": {
+                "type": "CharField",
+                "readonly": True,
+            }
+        }
 
         for field in self.model._meta.fields:
             fields[field.name] = self.get_field(field)
