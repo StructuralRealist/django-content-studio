@@ -50,6 +50,7 @@ class AdminSite(admin.AdminSite):
         models.TextField: widgets.TextAreaWidget,
         models.BooleanField: widgets.CheckboxWidget,
         models.NullBooleanField: widgets.CheckboxWidget,
+        models.ForeignKey: widgets.ForeignKeyWidget,
     }
 
     default_format_mapping = {

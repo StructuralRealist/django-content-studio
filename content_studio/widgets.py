@@ -61,3 +61,7 @@ class URLPathWidget(BaseWidget):
 
 class SlugWidget(BaseWidget):
     pass
+
+
+class ForeignKeyWidget(BaseWidget):
+    pass

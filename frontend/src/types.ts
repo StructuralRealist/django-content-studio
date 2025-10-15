@@ -126,6 +126,7 @@ export interface ModelField {
   help_text?: string;
   widget_class?: FieldWidget;
   format_class?: FieldFormat;
+  related_model?: string;
 }
 
 export interface Resource {
@@ -190,4 +191,5 @@ export enum FieldWidget {
   MultiSelectWidget = "MultiSelectWidget",
   URLPathWidget = "URLPathWidget",
   SlugWidget = "SlugWidget",
+  ForeignKeyWidget = "ForeignKeyWidget",
 }

@@ -3,6 +3,7 @@ import * as R from "ramda";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea.tsx";
+import { ForeignKeyWidget } from "@/components/widgets/foreign-key-widget.tsx";
 import { SelectWidget } from "@/components/widgets/select-widget.tsx";
 import { useAdminInfo } from "@/hooks/use-admin-info";
 import { FieldType, FieldWidget, type ModelField } from "@/types";
@@ -54,6 +55,14 @@ export function WidgetRenderer({
     case FieldWidget.TextAreaWidget:
       return (
         <Textarea value={value} onChange={(e) => onChange(e.target.value)} />
+      );
+    case FieldWidget.ForeignKeyWidget:
+      return (
+        <ForeignKeyWidget
+          value={value}
+          onChange={onChange}
+          relatedModel={field.related_model}
+        />
       );
     default:
       return (
