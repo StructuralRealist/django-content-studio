@@ -127,6 +127,7 @@ export interface ModelField {
   widget_class?: FieldWidget;
   format_class?: FieldFormat;
   related_model?: string;
+  json_schema?: Record<string, unknown>;
 }
 
 export interface Resource {
@@ -192,4 +193,5 @@ export enum FieldWidget {
   URLPathWidget = "URLPathWidget",
   SlugWidget = "SlugWidget",
   ForeignKeyWidget = "ForeignKeyWidget",
+  JSONSchemaWidget = "JSONSchemaWidget",
 }

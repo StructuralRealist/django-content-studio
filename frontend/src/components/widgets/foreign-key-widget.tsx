@@ -11,14 +11,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover.tsx";
 import { useHttp } from "@/hooks/use-http.ts";
-import type { PaginatedResponse, Resource } from "@/types.ts";
+import type { ModelField, PaginatedResponse, Resource } from "@/types.ts";
 
 export function ForeignKeyWidget({
-  relatedModel,
+  field,
   value,
   onChange,
 }: {
-  relatedModel?: string;
+  field: ModelField;
   onChange?: any;
   value?: any;
 }) {
@@ -26,6 +26,7 @@ export function ForeignKeyWidget({
   const http = useHttp();
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
+  const relatedModel = field.related_model;
   const { data } = useQuery({
     enabled: !R.isNil(relatedModel),
     queryKey: ["related-model", relatedModel, search],

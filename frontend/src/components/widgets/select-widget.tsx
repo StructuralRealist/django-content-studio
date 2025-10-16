@@ -4,15 +4,16 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select.tsx";
+} from "@/components/ui/select";
+import type { ModelField } from "@/types";
 
 export function SelectWidget({
-  choices,
+  field,
   value,
   onChange,
 }: {
-  choices: string[][];
-  onChange?: any;
+  field: ModelField;
+  onChange(value: any): void;
   value?: any;
 }) {
   return (
@@ -21,7 +22,7 @@ export function SelectWidget({
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
-        {choices.map(([value, label]) => (
+        {field.choices?.map(([value, label]) => (
           <SelectItem value={value}>{label}</SelectItem>
         ))}
       </SelectContent>

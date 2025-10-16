@@ -65,4 +65,7 @@ class ModelSerializer:
         if getattr(field, "max_length", None) is not None:
             data["max_length"] = field.max_length
 
+        if getattr(field, "json_schema", None) is not None:
+            data["json_schema"] = field.json_schema
+
         return data

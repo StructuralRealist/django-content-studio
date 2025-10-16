@@ -65,3 +65,7 @@ class SlugWidget(BaseWidget):
 
 class ForeignKeyWidget(BaseWidget):
     pass
+
+
+class JSONSchemaWidget(BaseWidget):
+    pass

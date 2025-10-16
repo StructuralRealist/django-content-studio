@@ -1,72 +1,46 @@
 import * as R from "ramda";
+import React, { useMemo } from "react";
 
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea.tsx";
-import { ForeignKeyWidget } from "@/components/widgets/foreign-key-widget.tsx";
-import { SelectWidget } from "@/components/widgets/select-widget.tsx";
 import { useAdminInfo } from "@/hooks/use-admin-info";
 import { FieldType, FieldWidget, type ModelField } from "@/types";
 
+import { FallbackWidget } from "./fallback-widget";
+import { ForeignKeyWidget } from "./foreign-key-widget";
+import { InputWidget } from "./input-widget";
+import { JSONSchemaWidget } from "./json-schema-widget";
 import { RichTextWidget } from "./rich-text-widget";
+import { SelectWidget } from "./select-widget";
 
 export function WidgetRenderer({
   value,
   onChange,
   field,
-  ...props
 }: {
   value: any;
   onChange(value: any): void;
   field: ModelField;
 }) {
   const { data: info } = useAdminInfo();
-  const widgetClass = R.cond([
-    [R.isNil, R.always(null)],
-    [
-      () => field.type === FieldType.CharField && !R.isNil(field.choices),
-      R.always(FieldWidget.SelectWidget),
-    ],
-    [R.T, R.identity],
-  ])(field.widget_class ?? info?.widgets[field.type]?.name);
+  const widgetClass =
+    field.widget_class ?? info?.widgets[field.type]?.name ?? null;
 
-  switch (widgetClass) {
-    case FieldWidget.InputWidget:
-    case FieldWidget.URLPathWidget:
-      return (
-        <Input
-          {...props}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-        />
-      );
-    case FieldWidget.RichTextWidget:
-      return <RichTextWidget value={value} onChange={onChange} />;
-    case FieldWidget.SelectWidget:
-      return (
-        <SelectWidget
-          choices={field.choices ?? []}
-          value={value}
-          onChange={onChange}
-        />
-      );
-    case FieldWidget.CheckboxWidget:
-      return <Checkbox checked={value} onCheckedChange={onChange} />;
-    case FieldWidget.TextAreaWidget:
-      return (
-        <Textarea value={value} onChange={(e) => onChange(e.target.value)} />
-      );
-    case FieldWidget.ForeignKeyWidget:
-      return (
-        <ForeignKeyWidget
-          value={value}
-          onChange={onChange}
-          relatedModel={field.related_model}
-        />
-      );
-    default:
-      return (
-        <Input readOnly value={value ? value.__str__ || String(value) : ""} />
-      );
-  }
+  const WidgetComp = useMemo(
+    () =>
+      R.cond([
+        [R.isNil, R.always(InputWidget)],
+        [
+          () => field.type === FieldType.CharField && !R.isNil(field.choices),
+          R.always(SelectWidget),
+        ],
+        [R.equals(FieldWidget.InputWidget), R.always(InputWidget)],
+        [R.equals(FieldWidget.RichTextWidget), R.always(RichTextWidget)],
+        [R.equals(FieldWidget.URLPathWidget), R.always(InputWidget)],
+        [R.equals(FieldWidget.JSONSchemaWidget), R.always(JSONSchemaWidget)],
+        [R.equals(FieldWidget.ForeignKeyWidget), R.always(ForeignKeyWidget)],
+        [R.T, R.always(FallbackWidget)],
+      ])(widgetClass),
+    [field.choices, field.type, widgetClass],
+  );
+
+  return <WidgetComp value={value} onChange={onChange} field={field} />;
 }
