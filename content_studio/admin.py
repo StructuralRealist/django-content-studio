@@ -51,6 +51,7 @@ class AdminSite(admin.AdminSite):
         models.BooleanField: widgets.CheckboxWidget,
         models.NullBooleanField: widgets.CheckboxWidget,
         models.ForeignKey: widgets.ForeignKeyWidget,
+        models.OneToOneField: widgets.ForeignKeyWidget,
     }
 
     default_format_mapping = {
@@ -71,6 +72,7 @@ class AdminSite(admin.AdminSite):
         models.DateTimeField: formats.DateTimeFormat,
         models.TimeField: formats.TimeFormat,
         models.ForeignKey: formats.ForeignKeyFormat,
+        models.OneToOneField: formats.ForeignKeyFormat,
     }
 
     def setup(self):
@@ -80,6 +82,13 @@ class AdminSite(admin.AdminSite):
         # Add login backend's view set to the
         # Content Studio router.
         self.login_backend.set_up_router()
+
+    def get_thumbnail(self, obj) -> str:
+        """
+        Method for getting and manipulating the image path (or URL).
+        By default, this returns the image path as is.
+        """
+        return obj.file.url
 
 
 admin_site = AdminSite()

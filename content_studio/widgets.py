@@ -69,3 +69,7 @@ class ForeignKeyWidget(BaseWidget):
 
 class JSONSchemaWidget(BaseWidget):
     pass
+
+
+class MediaWidget(BaseWidget):
+    pass

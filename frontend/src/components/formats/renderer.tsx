@@ -1,9 +1,13 @@
+import * as R from "ramda";
+import { useMemo } from "react";
+
 import { useAdminInfo } from "@/hooks/use-admin-info";
-import { FieldFormat, type ModelField } from "@/types";
+import { FieldFormat, FieldType, type ModelField } from "@/types";
 
 import { BooleanFormat } from "./boolean-format";
 import { DateFormat } from "./date-format";
 import { DatetimeFormat } from "./datetime-format";
+import { FileFormat } from "./file-format";
 import { FileSizeFormat } from "./file-size-format";
 import { ForeignKeyFormat } from "./foreign-key-format";
 import { MediaFormat } from "./media-format";
@@ -20,22 +24,26 @@ export function FormatRenderer({
   const { data: info } = useAdminInfo();
   const formatClass = field.format_class ?? info?.formats[field.type]?.name;
 
-  switch (formatClass) {
-    case FieldFormat.FileSizeFormat:
-      return <FileSizeFormat value={value} />;
-    case FieldFormat.BooleanFormat:
-      return <BooleanFormat value={value} />;
-    case FieldFormat.TimeFormat:
-      return <TimeFormat value={value} />;
-    case FieldFormat.DateFormat:
-      return <DateFormat value={value} />;
-    case FieldFormat.DateTimeFormat:
-      return <DatetimeFormat value={value} />;
-    case FieldFormat.ForeignKeyFormat:
-      return <ForeignKeyFormat value={value} />;
-    case FieldFormat.MediaFormat:
-      return <MediaFormat value={value} />;
-    default:
-      return <TextFormat value={value} />;
-  }
+  const FormatComp = useMemo(
+    () =>
+      R.cond([
+        [R.isNil, R.always(TextFormat)],
+        [
+          () => field.type === FieldType.CharField && !R.isNil(field.choices),
+          R.always(TextFormat),
+        ],
+        [R.equals(FieldFormat.FileSizeFormat), R.always(FileSizeFormat)],
+        [R.equals(FieldFormat.FileFormat), R.always(FileFormat)],
+        [R.equals(FieldFormat.BooleanFormat), R.always(BooleanFormat)],
+        [R.equals(FieldFormat.TimeFormat), R.always(TimeFormat)],
+        [R.equals(FieldFormat.DateFormat), R.always(DateFormat)],
+        [R.equals(FieldFormat.DateTimeFormat), R.always(DatetimeFormat)],
+        [R.equals(FieldFormat.ForeignKeyFormat), R.always(ForeignKeyFormat)],
+        [R.equals(FieldFormat.MediaFormat), R.always(MediaFormat)],
+        [R.T, R.always(TextFormat)],
+      ])(formatClass),
+    [field.choices, field.type, formatClass],
+  );
+
+  return <FormatComp value={value} field={field} />;
 }

@@ -8,6 +8,7 @@ import { FallbackWidget } from "./fallback-widget";
 import { ForeignKeyWidget } from "./foreign-key-widget";
 import { InputWidget } from "./input-widget";
 import { JSONSchemaWidget } from "./json-schema-widget";
+import { MediaWidget } from "./media-widget";
 import { RichTextWidget } from "./rich-text-widget";
 import { SelectWidget } from "./select-widget";
 
@@ -37,6 +38,7 @@ export function WidgetRenderer({
         [R.equals(FieldWidget.URLPathWidget), R.always(InputWidget)],
         [R.equals(FieldWidget.JSONSchemaWidget), R.always(JSONSchemaWidget)],
         [R.equals(FieldWidget.ForeignKeyWidget), R.always(ForeignKeyWidget)],
+        [R.equals(FieldWidget.MediaWidget), R.always(MediaWidget)],
         [R.T, R.always(FallbackWidget)],
       ])(widgetClass),
     [field.choices, field.type, widgetClass],

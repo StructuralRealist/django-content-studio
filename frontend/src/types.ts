@@ -148,34 +148,35 @@ export interface FormSet {
 }
 
 export enum FieldType {
+  BooleanField = "BooleanField",
   CharField = "CharField",
-  EmailField = "EmailField",
-  TextField = "TextField",
-  HTMLField = "HTMLField",
-  URLPathField = "URLPathField",
   DateField = "DateField",
   DateTimeField = "DateTimeField",
-  TimeField = "TimeField",
-  BooleanField = "BooleanField",
-  IntegerField = "IntegerField",
-  FloatField = "FloatField",
   DecimalField = "DecimalField",
-  UUIDField = "UUIDField",
+  EmailField = "EmailField",
+  FloatField = "FloatField",
+  HTMLField = "HTMLField",
+  IntegerField = "IntegerField",
   SlugField = "SlugField",
+  TextField = "TextField",
+  TimeField = "TimeField",
+  URLPathField = "URLPathField",
+  UUIDField = "UUIDField",
 }
 
 export enum FieldFormat {
-  TextFormat = "TextFormat",
-  HtmlFormat = "HtmlFormat",
   BooleanFormat = "BooleanFormat",
   DateFormat = "DateFormat",
   DateTimeFormat = "DateTimeFormat",
-  TimeFormat = "TimeFormat",
-  NumberFormat = "NumberFormat",
+  FileFormat = "FileFormat",
   FileSizeFormat = "FileSizeFormat",
-  TagFormat = "TagFormat",
   ForeignKeyFormat = "ForeignKeyFormat",
+  HtmlFormat = "HtmlFormat",
   MediaFormat = "MediaFormat",
+  NumberFormat = "NumberFormat",
+  TagFormat = "TagFormat",
+  TextFormat = "TextFormat",
+  TimeFormat = "TimeFormat",
 }
 
 export enum FieldWidget {
@@ -194,4 +195,5 @@ export enum FieldWidget {
   SlugWidget = "SlugWidget",
   ForeignKeyWidget = "ForeignKeyWidget",
   JSONSchemaWidget = "JSONSchemaWidget",
+  MediaWidget = "MediaWidget",
 }
