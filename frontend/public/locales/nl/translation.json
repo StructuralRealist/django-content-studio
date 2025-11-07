@@ -4,7 +4,11 @@
     "save": "Opslaan",
     "create": "Maak aan",
     "cancel": "Annuleren",
-    "general": "Algemeen"
+    "general": "Algemeen",
+    "delete": "Verwijderen",
+    "deleting": "Verwijderen...",
+    "deleted": "Verwijderd",
+    "edit": "Bewerken"
   },
   "login": {
     "title": "Welkom terug",
@@ -35,7 +39,7 @@
     "new_folder": "Nieuwe map"
   },
   "widgets": {
-    "rich_text_editor": {
+    "rich_text_widget": {
         "heading1": "Kop 1",
         "heading2": "Kop 2",
         "heading3": "Kop 3",
@@ -48,6 +52,11 @@
         "set_link": "Voeg link toe",
         "update_link": "Bewerk link",
         "remove_link": "Verwijder link"
+    },
+    "media_widget": {
+      "select_media": "Selecteer media",
+      "dialog_title": "Selecteer media",
+      "upload_label": "Upload media"
     }
   }
 }

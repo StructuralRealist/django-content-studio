@@ -11,6 +11,7 @@ import { JSONSchemaWidget } from "./json-schema-widget";
 import { MediaWidget } from "./media-widget";
 import { RichTextWidget } from "./rich-text-widget";
 import { SelectWidget } from "./select-widget";
+import { TextAreaWidget } from "./text-area-widget";
 
 export function WidgetRenderer({
   value,
@@ -34,6 +35,7 @@ export function WidgetRenderer({
           R.always(SelectWidget),
         ],
         [R.equals(FieldWidget.InputWidget), R.always(InputWidget)],
+        [R.equals(FieldWidget.TextAreaWidget), R.always(TextAreaWidget)],
         [R.equals(FieldWidget.RichTextWidget), R.always(RichTextWidget)],
         [R.equals(FieldWidget.URLPathWidget), R.always(InputWidget)],
         [R.equals(FieldWidget.JSONSchemaWidget), R.always(JSONSchemaWidget)],

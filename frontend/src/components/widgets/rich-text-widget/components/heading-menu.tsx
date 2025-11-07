@@ -47,11 +47,11 @@ export function HeadingMenu({ editor }: { editor: Editor }) {
         }
       }}
     >
-      <SelectTrigger>{t(`widgets.rich_text_editor.${value}`)}</SelectTrigger>
+      <SelectTrigger>{t(`widgets.rich_text_widget.${value}`)}</SelectTrigger>
       <SelectContent>
         {NODE_TYPES.map((nodeType) => (
           <SelectItem key={nodeType} value={nodeType}>
-            {t(`widgets.rich_text_editor.${nodeType}`)}
+            {t(`widgets.rich_text_widget.${nodeType}`)}
           </SelectItem>
         ))}
       </SelectContent>

@@ -32,8 +32,8 @@ export function LinkButton({ editor }: { editor: Editor }) {
       <Tooltip>
         <TooltipContent>
           {editor.isActive("link")
-            ? t("widgets.rich_text_editor.update_link")
-            : t("widgets.rich_text_editor.set_link")}
+            ? t("widgets.rich_text_widget.update_link")
+            : t("widgets.rich_text_widget.set_link")}
         </TooltipContent>
         <TooltipTrigger asChild>
           <Button
@@ -74,8 +74,8 @@ const LinkEditDialog = ({
         <DialogHeader>
           <DialogTitle>
             {isEdit
-              ? t("widgets.rich_text_editor.update_link")
-              : t("widgets.rich_text_editor.set_link")}
+              ? t("widgets.rich_text_widget.update_link")
+              : t("widgets.rich_text_widget.set_link")}
           </DialogTitle>
         </DialogHeader>
         <div className="py-6">
@@ -95,7 +95,7 @@ const LinkEditDialog = ({
                 onClose();
               }}
             >
-              {t("widgets.rich_text_editor.remove_link")}
+              {t("widgets.rich_text_widget.remove_link")}
             </Button>
           )}
           <Button variant="ghost" onClick={() => onClose()}>
@@ -113,8 +113,8 @@ const LinkEditDialog = ({
             }}
           >
             {isEdit
-              ? t("widgets.rich_text_editor.update_link")
-              : t("widgets.rich_text_editor.set_link")}
+              ? t("widgets.rich_text_widget.update_link")
+              : t("widgets.rich_text_widget.set_link")}
           </Button>
         </DialogFooter>
       </DialogContent>
