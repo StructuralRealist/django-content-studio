@@ -11,9 +11,9 @@ class MediaItemSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def get_thumbnail(self, obj):
+        admin_site = cs_settings.ADMIN_SITE
 
-        if obj.type == "image":
-            admin_site = cs_settings.ADMIN_SITE
+        if admin_site and obj.type == "image":
             return admin_site.get_thumbnail(obj)
 
         return None

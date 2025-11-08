@@ -3,11 +3,12 @@ import * as R from "ramda";
 import React, { useCallback, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useTranslation } from "react-i18next";
-import { PiCheckBold, PiFile, PiUpload, PiXBold } from "react-icons/pi";
+import { PiCheckBold, PiUpload, PiXBold } from "react-icons/pi";
 import { toast } from "sonner";
 
 import { FolderPath } from "@/components/media-library/folder-path";
 import { Folders } from "@/components/media-library/folders";
+import { ItemCard } from "@/components/media-library/item-card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { DebouncedInput } from "@/components/ui/debounced-input";
@@ -20,8 +21,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Pagination } from "@/components/ui/pagination";
-import { Spinner } from "@/components/ui/spinner.tsx";
-import { useCreateMedia } from "@/hooks/use-create-media.ts";
+import { Spinner } from "@/components/ui/spinner";
+import { useCreateMedia } from "@/hooks/use-create-media";
 import { useListMedia } from "@/hooks/use-list-media";
 import { cn, getErrorMessage } from "@/lib/utils";
 import type { ModelField } from "@/types";
@@ -206,14 +207,14 @@ function SelectDialogContent({
 
           {data?.results.map((item: any) => {
             const isSelected = selection.some(R.whereEq({ id: item.id }));
+
             return (
-              <button
-                className={cn(
-                  "relative flex flex-col gap-2 p-4 border rounded bg-white overflow-hidden",
-                  {
-                    "border-slate-500": isSelected,
-                  },
-                )}
+              <ItemCard
+                key={item.id}
+                item={item}
+                className={cn({
+                  "border-slate-500": isSelected,
+                })}
                 onClick={() => {
                   if (multiple) {
                     setSelection(
@@ -224,18 +225,6 @@ function SelectDialogContent({
                   }
                 }}
               >
-                {item.type === "image" ? (
-                  <img
-                    src={item.thumbnail}
-                    alt=""
-                    width={200}
-                    className="object-cover aspect-square rounded-md"
-                  />
-                ) : (
-                  <div className="rounded-md aspect-square bg-accent flex items-center justify-center select-none">
-                    <PiFile />
-                  </div>
-                )}
                 {isSelected && (
                   <div className="absolute left-0 top-0 right-0 bottom-0 bg-foreground/40 z-10">
                     <div className="size-4 rounded-full bg-primary text-primary-foreground flex items-center justify-center absolute z-10 left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 shadow">
@@ -243,10 +232,7 @@ function SelectDialogContent({
                     </div>
                   </div>
                 )}
-                <div className="text-sm font-semibold line-clamp-2">
-                  {item.name}
-                </div>
-              </button>
+              </ItemCard>
             );
           })}
         </div>

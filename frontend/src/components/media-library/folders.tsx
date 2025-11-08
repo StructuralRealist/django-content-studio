@@ -1,9 +1,16 @@
 import * as R from "ramda";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { PiFolder, PiPlus, PiTrash } from "react-icons/pi";
+import { PiFolder, PiPlus } from "react-icons/pi";
 
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu.tsx";
 import { Pagination } from "@/components/ui/pagination.tsx";
+import useConfirmDialog from "@/hooks/use-confirm-dialog.ts";
 import { useDeleteFolder } from "@/hooks/use-delete-folder.ts";
 import { useDiscover } from "@/hooks/use-discover.ts";
 import { useFolderPath } from "@/hooks/use-folder-path.ts";
@@ -24,6 +31,7 @@ export function Folders({
   const [page, setPage] = useState(1);
   const { isFetching, data } = useListFolder({ parent, page });
   const { data: folderPath } = useFolderPath(parent);
+  const confirm = useConfirmDialog();
 
   return (
     <div
@@ -50,28 +58,38 @@ export function Folders({
         )}
         {data?.results.map((folder) => (
           <li key={folder.id} className="flex">
-            <button
-              className="w-full text-left group font-medium text-sm px-4 py-0.5 flex items-center gap-2 hover:bg-accent rounded"
-              onClick={() => {
-                setPage(1);
-                onSelect?.(folder.id);
-              }}
-            >
-              <span className="size-5 bg-blue-50 p-px rounded flex items-center justify-center text-blue-500">
-                <PiFolder size={14} />
-              </span>
-              <span>{folder.name}</span>
-            </button>
-            <button
-              className="invisible group-hover:visible text-destructive"
-              onClick={() => {
-                if (confirm(`Delete ${folder.name}. Are you sure?`)) {
-                  deleteFolder(folder.id);
-                }
-              }}
-            >
-              <PiTrash />
-            </button>
+            <ContextMenu>
+              <ContextMenuTrigger asChild>
+                <button
+                  className="w-full text-left group font-medium text-sm px-4 py-0.5 flex items-center gap-2 hover:bg-accent rounded data-[state=open]:bg-accent"
+                  onClick={() => {
+                    setPage(1);
+                    onSelect?.(folder.id);
+                  }}
+                >
+                  <span className="size-5 bg-blue-50 p-px rounded flex items-center justify-center text-blue-500">
+                    <PiFolder size={14} />
+                  </span>
+                  <span>{folder.name}</span>
+                </button>
+              </ContextMenuTrigger>
+              <ContextMenuContent>
+                <ContextMenuItem
+                  className="text-destructive"
+                  onSelect={async () => {
+                    const confirmed = await confirm({
+                      title: t("common.delete_confirm_title"),
+                      description: t("common.delete_confirm_description"),
+                    });
+                    if (confirmed) {
+                      deleteFolder(folder.id);
+                    }
+                  }}
+                >
+                  {t("common.delete")}
+                </ContextMenuItem>
+              </ContextMenuContent>
+            </ContextMenu>
           </li>
         ))}
       </ul>

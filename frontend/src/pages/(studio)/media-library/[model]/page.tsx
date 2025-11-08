@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { PiImageBold } from "react-icons/pi";
 import { useSearchParams } from "react-router";
 
+import { CreateFolderButton } from "@/components/media-library/create-folder-button.tsx";
 import { FolderPath } from "@/components/media-library/folder-path";
 import { Folders } from "@/components/media-library/folders";
 import { Pagination } from "@/components/ui/pagination";
@@ -26,41 +27,45 @@ export function MediaLibraryPage() {
   const { data } = useListMedia({ folder, page, filters });
 
   return model && data ? (
-    <div className="p-5">
-      <div className="flex items-center gap-4 mb-8">
-        <PiImageBold />
-        <div>
-          <h1 className="text-xl/tight font-semibold">
+    <div className="flex flex-col overflow-hidden">
+      <div className="flex items-center gap-4 mb-6 py-3 px-5 border-b">
+        <PiImageBold size={24} className="text-muted-foreground shrink-0" />
+        <div className="flex-1">
+          <h1 className="text-xl/tight font-semibold mb-0.5">
             {t("media-library.title")}
           </h1>
-          <div className="text-muted-foreground">
-            {t("media-library.description")}
-          </div>
+          {discover.media_library.folders ? (
+            <FolderPath
+              folder={folder}
+              onSelect={(folder) =>
+                setSearchParams((searchParams) => {
+                  if (folder) {
+                    searchParams.set("folder", folder);
+                  } else {
+                    searchParams.delete("folder");
+                  }
+                  return searchParams;
+                })
+              }
+            />
+          ) : (
+            <div className="text-muted-foreground">
+              {t("media-library.description")}
+            </div>
+          )}
+        </div>
+
+        <div className="flex items-center gap-2">
+          <CreateFolderButton parent={folder} />
         </div>
       </div>
 
-      <div className="mb-8">
+      <div className="mb-8 px-5">
         <Filters filters={filters} onFilterChange={setFilters} />
       </div>
 
       {discover.media_library.folders && (
-        <FolderPath
-          folder={folder}
-          onSelect={(folder) =>
-            setSearchParams((searchParams) => {
-              if (folder) {
-                searchParams.set("folder", folder);
-              } else {
-                searchParams.delete("folder");
-              }
-              return searchParams;
-            })
-          }
-        />
-      )}
-
-      {discover.media_library.folders && (
-        <div className="mb-4">
+        <div className="mb-4 px-5">
           <Folders
             parent={folder}
             onSelect={(folder) =>
@@ -77,19 +82,21 @@ export function MediaLibraryPage() {
         </div>
       )}
 
-      <GridView items={data.results} />
+      <div className="px-5 overflow-y-auto scrollbar flex-1">
+        <GridView items={data.results} />
 
-      <div className="py-6">
-        <Pagination
-          current={data.pagination.current}
-          pages={data.pagination.pages}
-          onPageChange={(page) =>
-            setSearchParams((searchParams) => {
-              searchParams.set("page", `${page}`);
-              return searchParams;
-            })
-          }
-        />
+        <div className="py-5">
+          <Pagination
+            current={data.pagination.current}
+            pages={data.pagination.pages}
+            onPageChange={(page) =>
+              setSearchParams((searchParams) => {
+                searchParams.set("page", `${page}`);
+                return searchParams;
+              })
+            }
+          />
+        </div>
       </div>
     </div>
   ) : (
