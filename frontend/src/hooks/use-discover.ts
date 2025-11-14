@@ -18,8 +18,8 @@ export function useDiscover() {
           enabled: boolean;
           folders: boolean;
           models: {
-            media_model: Model | null;
-            folder_model: Model | null;
+            media_model: string | null;
+            folder_model: string | null;
           };
         };
       }>("/discover");

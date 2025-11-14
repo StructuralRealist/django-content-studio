@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { PiArrowLeft, PiDotsThreeBold } from "react-icons/pi";
+import { PiDotsThreeBold, PiX } from "react-icons/pi";
 import { useNavigate } from "react-router";
 
 import { Button } from "@/components/ui/button";
@@ -46,7 +46,7 @@ export function Header({
                 }
               }}
             >
-              <PiArrowLeft />
+              <PiX />
             </Button>
           </DialogClose>
           <div className="select-none">

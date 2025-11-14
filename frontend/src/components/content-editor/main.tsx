@@ -2,11 +2,11 @@ import * as R from "ramda";
 import { useTranslation } from "react-i18next";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useDiscover } from "@/hooks/use-discover.ts";
+import { useDiscover } from "@/hooks/use-discover";
 import type { Id, Model } from "@/types";
 
 import { FormSet } from "./form-set";
-import { Inline } from "./inline.tsx";
+import { Inline } from "./inline";
 
 export function Main({ model, id }: { model: Model; id?: Id | null }) {
   const { t } = useTranslation();

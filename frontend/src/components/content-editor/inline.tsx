@@ -13,7 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useHttp } from "@/hooks/use-http";
-import { cn } from "@/lib/utils.ts";
+import { cn } from "@/lib/utils";
 import type { Id, Model, PaginatedResponse, Resource } from "@/types";
 
 import { Editor } from "./editor";

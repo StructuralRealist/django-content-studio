@@ -99,12 +99,8 @@ class AdminApiViewSet(ViewSet):
             "enabled": media_model is not None,
             "folders": folder_model is not None,
             "models": {
-                "media_model": {
-                    **ModelSerializer(media_model).serialize(),
-                },
-                "folder_model": {
-                    **ModelSerializer(folder_model).serialize(),
-                },
+                "media_model": media_model._meta.label_lower,
+                "folder_model": folder_model._meta.label_lower,
             },
         }
 

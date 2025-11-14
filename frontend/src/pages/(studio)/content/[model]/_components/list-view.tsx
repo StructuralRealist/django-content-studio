@@ -1,7 +1,9 @@
 import * as R from "ramda";
 import { useNavigate } from "react-router";
 
+import { ContentEditorDialog } from "@/components/content-editor";
 import { FormatRenderer } from "@/components/formats/renderer";
+import { DialogTrigger } from "@/components/ui/dialog";
 import {
   Table,
   TableBody,
@@ -16,7 +18,7 @@ export function ListView({
   items,
   model,
 }: {
-  items: { id: number | string; [p: string]: unknown }[];
+  items: { id: string; [p: string]: unknown }[];
   model: Model;
 }) {
   const navigate = useNavigate();
@@ -35,23 +37,26 @@ export function ListView({
         </TableHeader>
         <TableBody>
           {items.map((item) => (
-            <TableRow
+            <ContentEditorDialog
               key={item.id}
-              onClick={() =>
-                navigate({ hash: `#editor:${model.label}:${item.id}` })
-              }
+              modelLabel={model.label}
+              id={item.id}
             >
-              {model.admin.list.display
-                .filter((field) => !R.isNil(model.fields[field]))
-                .map((field) => (
-                  <TableCell key={field}>
-                    <FormatRenderer
-                      value={item[field]}
-                      field={model.fields[field]}
-                    />
-                  </TableCell>
-                ))}
-            </TableRow>
+              <DialogTrigger asChild>
+                <TableRow>
+                  {model.admin.list.display
+                    .filter((field) => !R.isNil(model.fields[field]))
+                    .map((field) => (
+                      <TableCell key={field}>
+                        <FormatRenderer
+                          value={item[field]}
+                          field={model.fields[field]}
+                        />
+                      </TableCell>
+                    ))}
+                </TableRow>
+              </DialogTrigger>
+            </ContentEditorDialog>
           ))}
         </TableBody>
       </Table>
