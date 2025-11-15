@@ -1,3 +1,4 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -5,15 +6,23 @@ import { PiDotsThreeBold, PiX } from "react-icons/pi";
 import { useNavigate } from "react-router";
 
 import { Button } from "@/components/ui/button";
-import { DialogClose, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useAdminInfo } from "@/hooks/use-admin-info";
+import useConfirmDialog from "@/hooks/use-confirm-dialog";
+import { useHttp } from "@/hooks/use-http";
 import type { DateTimeString, Model, Resource } from "@/types";
 
 export function Header({
   model,
   resource,
-  onSave,
   isSaving,
+  onSave,
 }: {
   model: Model;
   resource?: Resource;
@@ -22,7 +31,9 @@ export function Header({
 }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const http = useHttp();
   const { data: info } = useAdminInfo();
+  const confirm = useConfirmDialog();
   const form = useFormContext();
   const isCreate = !resource?.id;
   const { isDirty } = form.formState;
@@ -30,25 +41,41 @@ export function Header({
     resource && info
       ? (resource[info.settings.edited_at_attr] as DateTimeString)
       : null;
+  const queryClient = useQueryClient();
+  const { mutateAsync } = useMutation({
+    async mutationFn(id: string) {
+      await http.delete(`/content/${model.label}/${id}`);
+    },
+    async onSuccess() {
+      await queryClient.invalidateQueries({
+        queryKey: ["resources", model.label],
+      });
+    },
+  });
 
   return (
     model && (
       <>
         <DialogHeader className="border-b flex-row items-center gap-6 p-5">
-          <DialogClose asChild>
-            <Button
-              variant="outline"
-              size="icon"
-              disabled={isSaving}
-              onClick={(e) => {
-                if (isDirty && !confirm(t("editor.unsaved_alert"))) {
-                  e.preventDefault();
-                }
-              }}
-            >
-              <PiX />
-            </Button>
-          </DialogClose>
+          <Button
+            variant="outline"
+            size="icon"
+            disabled={isSaving}
+            onClick={async () => {
+              if (!isDirty) {
+                return navigate({ hash: "" });
+              }
+              const confirmed = await confirm({
+                description: t("editor.unsaved_alert"),
+              });
+
+              if (confirmed) {
+                navigate({ hash: "" });
+              }
+            }}
+          >
+            <PiX />
+          </Button>
           <div className="select-none">
             <DialogTitle>
               {`${t(isCreate ? "editor.title_create" : "editor.title_edit", { modelName: model.verbose_name.toLowerCase() })}`}
@@ -74,9 +101,30 @@ export function Header({
             >
               {t(isCreate ? "common.create" : "common.save")}
             </Button>
-            <Button size="icon" variant="ghost">
-              <PiDotsThreeBold />
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button size="icon" variant="ghost">
+                  <PiDotsThreeBold />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem
+                  className="text-destructive"
+                  onSelect={async () => {
+                    const confirmed = await confirm({
+                      title: t("common.delete_confirm_title"),
+                      description: t("common.delete_confirm_description"),
+                    });
+                    if (confirmed) {
+                      await mutateAsync(resource!.id);
+                      navigate({ hash: "" });
+                    }
+                  }}
+                >
+                  {t("common.delete")}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </DialogHeader>
       </>

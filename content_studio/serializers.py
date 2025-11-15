@@ -1,8 +1,7 @@
+from content_studio.settings import cs_settings
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework.relations import RelatedField
-
-from content_studio.settings import cs_settings
 
 user_model = get_user_model()
 
@@ -21,6 +20,9 @@ class ContentRelatedField(RelatedField):
             data["thumbnail"] = admin_site.get_thumbnail(value)
 
         return data
+
+    def to_internal_value(self, data):
+        return self.get_queryset().get(id=data["id"])
 
 
 class ContentSerializer(serializers.ModelSerializer):
