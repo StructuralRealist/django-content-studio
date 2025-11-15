@@ -5,7 +5,7 @@ import type { ModelField } from "@/types";
 
 export function MultiSelectWidget({
   field,
-  value,
+  value = [],
   onChange,
 }: {
   field: ModelField;

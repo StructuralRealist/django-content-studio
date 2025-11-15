@@ -4,6 +4,7 @@ import React, { useMemo } from "react";
 import { useAdminInfo } from "@/hooks/use-admin-info";
 import { FieldType, FieldWidget, type ModelField } from "@/types";
 
+import { DateWidget } from "./date-widget.tsx";
 import { FallbackWidget } from "./fallback-widget";
 import { ForeignKeyWidget } from "./foreign-key-widget";
 import { InputWidget } from "./input-widget";
@@ -43,6 +44,7 @@ export function WidgetRenderer({
         [R.equals(FieldWidget.ForeignKeyWidget), R.always(ForeignKeyWidget)],
         [R.equals(FieldWidget.MediaWidget), R.always(MediaWidget)],
         [R.equals(FieldWidget.MultiSelectWidget), R.always(MultiSelectWidget)],
+        [R.equals(FieldWidget.DateWidget), R.always(DateWidget)],
         [R.T, R.always(FallbackWidget)],
       ])(widgetClass),
     [field.choices, field.type, widgetClass],

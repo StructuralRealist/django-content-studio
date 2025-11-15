@@ -60,6 +60,9 @@
       "select_media": "Selecteer media",
       "dialog_title": "Selecteer media",
       "upload_label": "Upload media"
+    },
+     "date_picker": {
+      "placeholder": "Selecteer een datum"
     }
   }
 }

@@ -52,6 +52,8 @@ class AdminSite(admin.AdminSite):
         models.NullBooleanField: widgets.CheckboxWidget,
         models.ForeignKey: widgets.ForeignKeyWidget,
         models.OneToOneField: widgets.ForeignKeyWidget,
+        models.DateField: widgets.DateWidget,
+        models.DateTimeField: widgets.DateTimeWidget,
     }
 
     default_format_mapping = {
