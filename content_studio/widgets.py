@@ -67,6 +67,10 @@ class ForeignKeyWidget(BaseWidget):
     pass
 
 
+class ManyToManyWidget(BaseWidget):
+    pass
+
+
 class JSONSchemaWidget(BaseWidget):
     pass
 

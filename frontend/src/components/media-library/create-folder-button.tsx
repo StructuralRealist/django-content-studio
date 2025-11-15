@@ -1,7 +1,6 @@
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import { useTranslation } from "react-i18next";
 
-import { ContentEditorDialog } from "@/components/content-editor";
 import { Button } from "@/components/ui/button";
 import { useDiscover } from "@/hooks/use-discover";
 
@@ -11,13 +10,8 @@ export function CreateFolderButton({ parent }: { parent: string | null }) {
   const modelLabel = discover?.media_library.models.folder_model;
 
   return modelLabel ? (
-    <ContentEditorDialog
-      modelLabel={modelLabel}
-      className="sm:max-w-xl h-auto rounded-lg"
-    >
-      <DialogTrigger asChild>
-        <Button variant="outline">{t("media-library.new_folder")}</Button>
-      </DialogTrigger>
-    </ContentEditorDialog>
+    <DialogTrigger asChild>
+      <Button variant="outline">{t("media-library.new_folder")}</Button>
+    </DialogTrigger>
   ) : null;
 }

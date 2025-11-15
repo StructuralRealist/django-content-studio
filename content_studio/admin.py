@@ -51,6 +51,7 @@ class AdminSite(admin.AdminSite):
         models.BooleanField: widgets.CheckboxWidget,
         models.NullBooleanField: widgets.CheckboxWidget,
         models.ForeignKey: widgets.ForeignKeyWidget,
+        models.ManyToManyField: widgets.ManyToManyWidget,
         models.OneToOneField: widgets.ForeignKeyWidget,
         models.DateField: widgets.DateWidget,
         models.DateTimeField: widgets.DateTimeWidget,

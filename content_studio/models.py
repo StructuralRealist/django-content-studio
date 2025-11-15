@@ -24,8 +24,10 @@ class ModelSerializer:
                 "readonly": True,
             }
         }
+        standard_fields = self.model._meta.fields
+        m2m_fields = self.model._meta.many_to_many
 
-        for field in self.model._meta.fields:
+        for field in standard_fields + m2m_fields:
             fields[field.name] = self.get_field(field)
 
         return fields

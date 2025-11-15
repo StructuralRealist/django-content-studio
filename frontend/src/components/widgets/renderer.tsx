@@ -9,6 +9,7 @@ import { FallbackWidget } from "./fallback-widget";
 import { ForeignKeyWidget } from "./foreign-key-widget";
 import { InputWidget } from "./input-widget";
 import { JSONSchemaWidget } from "./json-schema-widget";
+import { ManyToManyWidget } from "./many-to-many-widget.tsx";
 import { MediaWidget } from "./media-widget";
 import { MultiSelectWidget } from "./multi-select-widget.tsx";
 import { RichTextWidget } from "./rich-text-widget";
@@ -36,15 +37,16 @@ export function WidgetRenderer({
           () => field.type === FieldType.CharField && !R.isNil(field.choices),
           R.always(SelectWidget),
         ],
-        [R.equals(FieldWidget.InputWidget), R.always(InputWidget)],
-        [R.equals(FieldWidget.TextAreaWidget), R.always(TextAreaWidget)],
-        [R.equals(FieldWidget.RichTextWidget), R.always(RichTextWidget)],
-        [R.equals(FieldWidget.URLPathWidget), R.always(InputWidget)],
-        [R.equals(FieldWidget.JSONSchemaWidget), R.always(JSONSchemaWidget)],
+        [R.equals(FieldWidget.DateWidget), R.always(DateWidget)],
         [R.equals(FieldWidget.ForeignKeyWidget), R.always(ForeignKeyWidget)],
+        [R.equals(FieldWidget.InputWidget), R.always(InputWidget)],
+        [R.equals(FieldWidget.JSONSchemaWidget), R.always(JSONSchemaWidget)],
+        [R.equals(FieldWidget.ManyToManyWidget), R.always(ManyToManyWidget)],
         [R.equals(FieldWidget.MediaWidget), R.always(MediaWidget)],
         [R.equals(FieldWidget.MultiSelectWidget), R.always(MultiSelectWidget)],
-        [R.equals(FieldWidget.DateWidget), R.always(DateWidget)],
+        [R.equals(FieldWidget.RichTextWidget), R.always(RichTextWidget)],
+        [R.equals(FieldWidget.TextAreaWidget), R.always(TextAreaWidget)],
+        [R.equals(FieldWidget.URLPathWidget), R.always(InputWidget)],
         [R.T, R.always(FallbackWidget)],
       ])(widgetClass),
     [field.choices, field.type, widgetClass],

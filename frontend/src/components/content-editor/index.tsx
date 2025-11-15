@@ -1,29 +1,26 @@
+import { useLocation, useNavigate } from "react-router";
+
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { cn } from "@/lib/utils";
 
 import { Editor } from "./editor";
 
-export function ContentEditorDialog({
-  modelLabel,
-  id,
-  children,
-  className,
-}: {
-  modelLabel: string;
-  id?: string | null;
-  children: React.ReactNode;
-  className?: string;
-}) {
+export function ContentEditor() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [_, modelLabel, id] = location.hash.split(":");
+
   return (
-    <Dialog>
-      {children}
+    <Dialog
+      open={location.hash.startsWith("#editor:")}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) {
+          navigate({ hash: "" });
+        }
+      }}
+    >
       <DialogContent
         showCloseButton={false}
-        onEscapeKeyDown={(e) => e.preventDefault()}
-        className={cn(
-          "sm:max-w-none w-screen h-screen rounded-none p-0",
-          className,
-        )}
+        className="sm:max-w-none w-screen h-screen rounded-none p-0"
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
         <Editor modelLabel={modelLabel} id={id} />
