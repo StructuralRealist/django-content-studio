@@ -1,3 +1,5 @@
+import bytes from "bytes";
+import * as R from "ramda";
 import { useTranslation } from "react-i18next";
 import { PiFileBold } from "react-icons/pi";
 import { toast } from "sonner";
@@ -40,6 +42,7 @@ export function ItemCard({
           {children}
           {item.type === "image" ? (
             <img
+              draggable={false}
               src={item.thumbnail}
               className="rounded aspect-square object-cover"
             />
@@ -48,7 +51,31 @@ export function ItemCard({
               <PiFileBold className="size-5 text-slate-400" />
             </div>
           )}
-          <div className="pt-2 text-sm font-semibold">{item.name}</div>
+          <div className="pt-2 text-sm font-semibold mb-2 line-clamp-1 break-all text-left">
+            {item.name}
+          </div>
+          <div className="flex justify-between items-center">
+            <div
+              className={cn(
+                "text-xs font-semibold px-2 py-0.5 border rounded select-none",
+                {
+                  "bg-blue-50 text-blue-500 border-blue-200":
+                    item.type === "image",
+                  "bg-amber-50 text-amber-500 border-amber-200":
+                    item.type === "file",
+                  "bg-pink-50 text-pink-500 border-pink-200":
+                    item.type === "video",
+                  "bg-emerald-50 text-emerald-500 border-emerald-200":
+                    item.type === "audio",
+                },
+              )}
+            >
+              {t(`media-library.file_types.${item.type}`)}
+            </div>
+            <div className="text-sm font-medium text-slate-400">
+              {!R.isNil(item.size) && bytes(item.size * 1000)}
+            </div>
+          </div>
         </button>
       </ContextMenuTrigger>
 

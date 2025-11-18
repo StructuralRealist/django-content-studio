@@ -1,8 +1,9 @@
 import * as R from "ramda";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { PiFolder, PiPlus } from "react-icons/pi";
+import { PiFolder } from "react-icons/pi";
 
+import { CreateFolderButton } from "@/components/media-library/create-folder-button.tsx";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -26,7 +27,8 @@ export function Folders({
 }) {
   const { t } = useTranslation();
   const { data: discover } = useDiscover();
-  const model = discover?.media_library.models.folder_model;
+  const folderModelName = discover?.media_library.models.folder_model;
+  const model = discover?.models.find(R.whereEq({ label: folderModelName }));
   const { mutate: deleteFolder } = useDeleteFolder();
   const [page, setPage] = useState(1);
   const { isFetching, data } = useListFolder({ parent, page });
@@ -105,13 +107,8 @@ export function Folders({
       )}
 
       {model?.admin?.permissions.add_permission && (
-        <div className="font-medium text-sm border-t border-dashed px-4 py-2">
-          <div>
-            <button className="flex items-center gap-2 text-muted-foreground hover:text-secondary-foreground">
-              <PiPlus className="mr-1" />
-              <span>{t("media_library.new_folder")}</span>
-            </button>
-          </div>
+        <div className="font-medium text-sm border-t border-dashed px-6 py-2">
+          <CreateFolderButton parent={parent} />
         </div>
       )}
     </div>

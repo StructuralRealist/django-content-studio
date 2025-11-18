@@ -39,7 +39,13 @@
   "media-library": {
     "title": "Mediabibliotheek",
     "description": "Beheer je media-bestanden hier.",
-    "new_folder": "Nieuwe map"
+    "new_folder": "Nieuwe map",
+    "file_types": {
+      "file": "Bestand",
+      "image": "Afbeelding",
+      "video": "Video",
+      "audio": "Audio"
+    }
   },
   "widgets": {
     "rich_text_widget": {

@@ -39,7 +39,13 @@
   "media-library": {
     "title": "Media library",
     "description": "Manage your media files here.",
-    "new_folder": "New folder"
+    "new_folder": "New folder",
+     "file_types": {
+      "file": "File",
+      "image": "Image",
+      "video": "Video",
+      "audio": "Audio"
+    }
   },
   "widgets": {
      "rich_text_widget": {

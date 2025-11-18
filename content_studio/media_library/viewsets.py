@@ -88,6 +88,10 @@ class MediaFolderViewSet(ModelViewSet):
         parent = self.request.query_params.get("parent", None)
         qs = self._folder_model.objects.all()
 
+        if self.action != "list":
+            return qs
+
+        # The list endpoint is always within the scope of a folder
         if not parent:
             return qs.filter(parent__isnull=True)
         return qs.filter(parent=parent)

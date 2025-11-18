@@ -22,4 +22,4 @@ class MediaItemSerializer(serializers.ModelSerializer):
 class MediaFolderSerializer(serializers.ModelSerializer):
     class Meta:
         model = cs_settings.MEDIA_LIBRARY_FOLDER_MODEL
-        fields = ["id", "name"]
+        fields = ["id", "name", "parent"]

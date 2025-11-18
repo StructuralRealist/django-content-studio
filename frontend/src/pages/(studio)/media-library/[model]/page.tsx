@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { PiImageBold } from "react-icons/pi";
 import { useSearchParams } from "react-router";
 
-import { CreateFolderButton } from "@/components/media-library/create-folder-button.tsx";
 import { FolderPath } from "@/components/media-library/folder-path";
 import { Folders } from "@/components/media-library/folders";
 import { Pagination } from "@/components/ui/pagination";
@@ -53,10 +52,6 @@ export function MediaLibraryPage() {
               {t("media-library.description")}
             </div>
           )}
-        </div>
-
-        <div className="flex items-center gap-2">
-          <CreateFolderButton parent={folder} />
         </div>
       </div>
 
