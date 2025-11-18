@@ -3,7 +3,6 @@ import dayjs from "dayjs";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { PiDotsThreeBold, PiX } from "react-icons/pi";
-import { useNavigate } from "react-router";
 
 import { Button } from "@/components/ui/button";
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -23,19 +22,23 @@ export function Header({
   resource,
   isSaving,
   onSave,
+  onDelete,
+  onClose,
 }: {
   model: Model;
   resource?: Resource;
-  onSave(): Promise<void>;
   isSaving: boolean;
+  onSave(): Promise<void>;
+  onDelete?: VoidFunction;
+  onClose?: VoidFunction;
 }) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const http = useHttp();
   const { data: info } = useAdminInfo();
   const confirm = useConfirmDialog();
   const form = useFormContext();
   const isCreate = !resource?.id;
+  const isSingleton = model?.admin.is_singleton ?? false;
   const { isDirty } = form.formState;
   const editedAt =
     resource && info
@@ -63,14 +66,14 @@ export function Header({
             disabled={isSaving}
             onClick={async () => {
               if (!isDirty) {
-                return navigate({ hash: "" });
+                return onClose?.();
               }
               const confirmed = await confirm({
                 description: t("editor.unsaved_alert"),
               });
 
               if (confirmed) {
-                navigate({ hash: "" });
+                onClose?.();
               }
             }}
           >
@@ -94,37 +97,38 @@ export function Header({
               onClick={async () => {
                 try {
                   await onSave();
-                  navigate({ hash: "" });
                 } catch (e) {}
               }}
               isLoading={isSaving}
             >
               {t(isCreate ? "common.create" : "common.save")}
             </Button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button size="icon" variant="ghost">
-                  <PiDotsThreeBold />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem
-                  className="text-destructive"
-                  onSelect={async () => {
-                    const confirmed = await confirm({
-                      title: t("common.delete_confirm_title"),
-                      description: t("common.delete_confirm_description"),
-                    });
-                    if (confirmed) {
-                      await mutateAsync(resource!.id);
-                      navigate({ hash: "" });
-                    }
-                  }}
-                >
-                  {t("common.delete")}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {!isSingleton && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button size="icon" variant="ghost">
+                    <PiDotsThreeBold />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem
+                    className="text-destructive"
+                    onSelect={async () => {
+                      const confirmed = await confirm({
+                        title: t("common.delete_confirm_title"),
+                        description: t("common.delete_confirm_description"),
+                      });
+                      if (confirmed) {
+                        await mutateAsync(resource!.id);
+                        onDelete?.();
+                      }
+                    }}
+                  >
+                    {t("common.delete")}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
         </DialogHeader>
       </>

@@ -141,10 +141,21 @@ export interface FormSetGroup {
   formsets: FormSet[];
 }
 
+export interface FormLayout {
+  columns: number;
+  fields: FormField[];
+}
+
 export interface FormSet {
   title: string;
   description: string;
-  fields: string[];
+  fields: (FormField | FormLayout)[];
+}
+
+export interface FormField {
+  name: string;
+  label: string | null;
+  col_span: number;
 }
 
 export enum FieldType {

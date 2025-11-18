@@ -23,7 +23,13 @@ export function ContentEditor() {
         className="sm:max-w-none w-screen h-screen rounded-none p-0"
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
-        <Editor modelLabel={modelLabel} id={id} />
+        <Editor
+          modelLabel={modelLabel}
+          id={id}
+          onClose={() => navigate({ hash: "" })}
+          onSave={() => navigate({ hash: "" })}
+          onDelete={() => navigate({ hash: "" })}
+        />
       </DialogContent>
     </Dialog>
   );

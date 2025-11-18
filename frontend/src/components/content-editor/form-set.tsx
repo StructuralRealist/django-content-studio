@@ -1,17 +1,8 @@
 import * as R from "ramda";
-import { useFormContext } from "react-hook-form";
 
-import { FormatRenderer } from "@/components/formats/renderer";
-import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { WidgetRenderer } from "@/components/widgets/renderer";
 import type { FormSet, Model } from "@/types";
+
+import { FormField } from "./form-field";
 
 export function FormSet({
   formSet,
@@ -20,8 +11,6 @@ export function FormSet({
   formSet: FormSet;
   model: Model;
 }) {
-  const form = useFormContext();
-
   return (
     <div>
       <div className="mb-4 empty:hidden">
@@ -33,41 +22,22 @@ export function FormSet({
         ) : null}
       </div>
       <div className="space-y-3">
-        {formSet.fields
-          .filter((field) => R.has(field, model.fields))
-          .map((fieldName, idx) => {
-            const modelField = model.fields[fieldName];
-
-            return (
-              <div key={idx}>
-                <FormField
-                  control={form.control}
-                  name={fieldName}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{modelField.verbose_name}</FormLabel>
-                      {modelField.readonly ? (
-                        <FormatRenderer
-                          value={field.value}
-                          field={modelField}
-                        />
-                      ) : (
-                        <FormControl>
-                          <WidgetRenderer
-                            key={idx}
-                            field={modelField}
-                            {...field}
-                          />
-                        </FormControl>
-                      )}
-                      <FormDescription>{modelField.help_text}</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            );
-          })}
+        {formSet.fields.map((formField, idx) =>
+          R.has("fields", formField) ? (
+            <div
+              className="grid gap-3"
+              style={{
+                gridTemplateColumns: `repeat(${formField.fields.length}, 1fr)`,
+              }}
+            >
+              {formField.fields.map((innerFormField) => (
+                <FormField key={idx} formField={innerFormField} model={model} />
+              ))}
+            </div>
+          ) : (
+            <FormField key={idx} formField={formField} model={model} />
+          ),
+        )}
       </div>
     </div>
   );

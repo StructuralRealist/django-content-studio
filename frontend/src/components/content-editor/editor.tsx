@@ -16,9 +16,15 @@ import { Main } from "./main";
 export function Editor({
   modelLabel,
   id,
+  onDelete,
+  onSave,
+  onClose,
 }: {
   modelLabel: string;
   id?: string | null;
+  onDelete: VoidFunction;
+  onSave: VoidFunction;
+  onClose: VoidFunction;
 }) {
   const queryClient = useQueryClient();
   const http = useHttp();
@@ -78,7 +84,12 @@ export function Editor({
             model={model}
             resource={resource}
             isSaving={isPending}
-            onSave={() => form.handleSubmit(onSubmit)()}
+            onSave={async () => {
+              await form.handleSubmit(onSubmit)();
+              onSave?.();
+            }}
+            onDelete={onDelete}
+            onClose={onClose}
           />
           <div className="flex flex-1 justify-center overflow-y-auto">
             <div className="w-full max-w-3xl">

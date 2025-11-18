@@ -19,17 +19,20 @@ export function FormatRenderer({
   field,
 }: {
   value: unknown;
-  field: ModelField;
+  field?: ModelField;
 }) {
   const { data: info } = useAdminInfo();
-  const formatClass = field.format_class ?? info?.formats[field.type]?.name;
+  const formatClass =
+    field?.format_class ??
+    info?.formats[field?.type]?.name ??
+    FieldFormat.TextFormat;
 
   const FormatComp = useMemo(
     () =>
       R.cond([
         [R.isNil, R.always(TextFormat)],
         [
-          () => field.type === FieldType.CharField && !R.isNil(field.choices),
+          () => field?.type === FieldType.CharField && !R.isNil(field.choices),
           R.always(TextFormat),
         ],
         [R.equals(FieldFormat.FileSizeFormat), R.always(FileSizeFormat)],
@@ -42,7 +45,7 @@ export function FormatRenderer({
         [R.equals(FieldFormat.MediaFormat), R.always(MediaFormat)],
         [R.T, R.always(TextFormat)],
       ])(formatClass),
-    [field.choices, field.type, formatClass],
+    [field?.choices, field?.type, formatClass],
   );
 
   return <FormatComp value={value} field={field} />;

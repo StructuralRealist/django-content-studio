@@ -1,7 +1,10 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { PiPlus } from "react-icons/pi";
 
 import { FormatRenderer } from "@/components/formats/renderer";
+import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Pagination } from "@/components/ui/pagination";
 import {
@@ -30,6 +33,7 @@ export function Inline({
   // Inline admin model
   adminModel: { fk_name: string; fields: string[] | null };
 }) {
+  const { t } = useTranslation();
   const http = useHttp();
   const [page, setPage] = useState(1);
   const readOnly = !model.admin;
@@ -56,9 +60,32 @@ export function Inline({
         <Table>
           <TableHeader>
             <TableRow>
-              {adminModel.fields?.map((field) => (
+              {adminModel.fields?.map((field, idx) => (
                 <TableHead key={field}>
-                  {model.fields[field]?.verbose_name}
+                  <div className="flex items-center">
+                    {model.fields[field]?.verbose_name}
+                    {idx === adminModel.fields!.length - 1 && (
+                      <div className="flex-1 inline-flex justify-end">
+                        <Dialog>
+                          <DialogContent
+                            className="p-0 sm:max-w-5xl"
+                            showCloseButton={false}
+                          >
+                            <Editor
+                              modelLabel={model.label}
+                              onDelete={() => {}}
+                            />
+                          </DialogContent>
+                          <DialogTrigger asChild>
+                            <Button size="sm" variant="outline">
+                              <PiPlus />
+                              {t("common.create")}
+                            </Button>
+                          </DialogTrigger>
+                        </Dialog>
+                      </div>
+                    )}
+                  </div>
                 </TableHead>
               ))}
             </TableRow>

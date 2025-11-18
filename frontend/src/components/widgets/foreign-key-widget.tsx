@@ -52,7 +52,7 @@ export function ForeignKeyWidget({
   return (
     <Popover modal open={open} onOpenChange={setOpen}>
       <PopoverTrigger className="w-[240px] flex items-center justify-between text-left border hover:border-stone-300 rounded-md px-3 h-8 text-sm select-none">
-        {value?.__str__}
+        <div className="flex-1">{value?.__str__}</div>
         <FiChevronDown className="size-4 opacity-50" />
       </PopoverTrigger>
       <PopoverContent className="max-h-[400px] w-[var(--radix-popover-trigger-width)] overflow-hidden p-0 flex flex-col">
