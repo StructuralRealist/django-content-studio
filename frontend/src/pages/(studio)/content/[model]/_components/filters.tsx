@@ -19,6 +19,7 @@ export function Filters({
       {model.admin.list.search && (
         <Input
           variant="secondary"
+          className="w-[260px] max-w-full"
           value={filters.search}
           onChange={(e) => onFilterChange({ search: e.target.value })}
           placeholder={t("common.search")}

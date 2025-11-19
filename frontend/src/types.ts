@@ -210,3 +210,23 @@ export enum FieldWidget {
   TimeWidget = "TimeWidget",
   URLPathWidget = "URLPathWidget",
 }
+
+export interface CropValue {
+  x: string;
+  y: string;
+  width: string;
+  height: string;
+  unit: "%";
+}
+
+export interface MediaItem {
+  id: string;
+  name: string;
+  thumbnail: string;
+  file: string;
+  crop?: CropValue[];
+  tags: [];
+  alt_text: string;
+  type: "file" | "image" | "video" | "audio";
+  size: number;
+}

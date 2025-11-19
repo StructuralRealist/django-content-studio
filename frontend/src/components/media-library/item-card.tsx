@@ -1,9 +1,11 @@
 import bytes from "bytes";
 import * as R from "ramda";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PiFileBold } from "react-icons/pi";
 import { toast } from "sonner";
 
+import { ItemEdit } from "@/components/media-library/item-edit.tsx";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -13,6 +15,7 @@ import {
 import useConfirmDialog from "@/hooks/use-confirm-dialog.ts";
 import { useDeleteMedia } from "@/hooks/use-delete-media";
 import { cn, getErrorMessage } from "@/lib/utils";
+import type { MediaItem } from "@/types.ts";
 
 export function ItemCard({
   item,
@@ -20,17 +23,20 @@ export function ItemCard({
   children,
   ...props
 }: {
-  item: any;
+  item: MediaItem;
 } & React.ComponentProps<"button">) {
   const { t } = useTranslation();
   const { mutateAsync, isPending } = useDeleteMedia();
   const confirm = useConfirmDialog();
+  const [edit, setEdit] = useState(false);
 
   return (
     <ContextMenu>
+      <ItemEdit itemId={item.id} open={edit} onClose={() => setEdit(false)} />
       <ContextMenuTrigger asChild key={item.id}>
         <button
           {...props}
+          onClick={() => setEdit(true)}
           className={cn(
             "border rounded p-4 data-[state=open]:border-ring flex flex-col",
             {
@@ -80,7 +86,7 @@ export function ItemCard({
       </ContextMenuTrigger>
 
       <ContextMenuContent>
-        <ContextMenuItem onSelect={() => null}>
+        <ContextMenuItem onSelect={() => setEdit(true)}>
           {t("common.edit")}
         </ContextMenuItem>
         <ContextMenuItem

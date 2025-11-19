@@ -2,17 +2,12 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import * as R from "ramda";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  PiFileTextBold,
-  PiGridNineBold,
-  PiListBulletsBold,
-} from "react-icons/pi";
+import { PiFileTextBold } from "react-icons/pi";
 import { Link, useParams, useSearchParams } from "react-router";
 
 import { buttonVariants } from "@/components/ui/button.tsx";
 import { Pagination } from "@/components/ui/pagination";
 import { Spinner } from "@/components/ui/spinner";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useDiscover } from "@/hooks/use-discover";
 import { useHttp } from "@/hooks/use-http";
 import { cn } from "@/lib/utils";
@@ -63,7 +58,7 @@ export function ModelListPage() {
         ) : (
           <PiFileTextBold />
         )}
-        <div className="select-none">
+        <div className="select-none flex-1">
           <h1 className="text-xl/tight font-semibold">
             {model.verbose_name_plural}
           </h1>
@@ -85,20 +80,6 @@ export function ModelListPage() {
 
       <div className="flex items-center justify-between mb-8">
         <Filters model={model} filters={filters} onFilterChange={setFilters} />
-
-        <ToggleGroup
-          type="single"
-          variant="outline"
-          value={view}
-          onValueChange={(v: "list" | "grid") => setView(v)}
-        >
-          <ToggleGroupItem value="list">
-            <PiListBulletsBold />
-          </ToggleGroupItem>
-          <ToggleGroupItem value="grid">
-            <PiGridNineBold />
-          </ToggleGroupItem>
-        </ToggleGroup>
       </div>
       {view === "list" ? <ListView items={data.results} model={model} /> : null}
       <div className="py-6">
