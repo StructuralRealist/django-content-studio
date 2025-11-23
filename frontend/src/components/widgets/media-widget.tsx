@@ -3,7 +3,13 @@ import * as R from "ramda";
 import React, { useCallback, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useTranslation } from "react-i18next";
-import { PiCheckBold, PiImage, PiUpload, PiXBold } from "react-icons/pi";
+import {
+  PiCheckBold,
+  PiFileBold,
+  PiImage,
+  PiUpload,
+  PiXBold,
+} from "react-icons/pi";
 import { toast } from "sonner";
 
 import { FolderPath } from "@/components/media-library/folder-path";
@@ -57,9 +63,19 @@ function SingleMedia({
   return (
     <div className="group relative">
       {value ? (
-        <Avatar className="w-full h-64 rounded-md">
-          <AvatarImage src={value.thumbnail} alt="" className="object-cover" />
-        </Avatar>
+        value.type === "image" ? (
+          <Avatar className="w-full h-64 rounded-md">
+            <AvatarImage
+              src={value.thumbnail}
+              alt=""
+              className="object-cover"
+            />
+          </Avatar>
+        ) : (
+          <div className="w-full h-64 rounded-md bg-accent flex items-center justify-center">
+            <PiFileBold size={24} />
+          </div>
+        )
       ) : (
         <img
           src="/img/media_placeholder.svg"

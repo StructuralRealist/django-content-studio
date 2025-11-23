@@ -1,6 +1,5 @@
 from django.apps import AppConfig
 from django.contrib import admin
-from django.core.exceptions import ImproperlyConfigured
 
 from . import VERSION
 from .paginators import ContentPagination
@@ -45,9 +44,10 @@ class DjangoContentStudioConfig(AppConfig):
 
         for model, admin_model in admin.site._registry.items():
             self._create_view_set(model, admin_model)
+
             for inline in admin_model.inlines:
                 self._create_view_set(
-                    model=inline.model, admin_model=inline, inline=True
+                    parent=model, model=inline.model, admin_model=inline
                 )
 
         log(
@@ -55,7 +55,7 @@ class DjangoContentStudioConfig(AppConfig):
             f"[green]Created CRUD API[/green]",
         )
 
-    def _create_view_set(self, model, admin_model, inline=False):
+    def _create_view_set(self, model, admin_model, parent=None):
         from .viewsets import BaseModelViewSet
         from .router import content_studio_router
         from .serializers import ContentSerializer
@@ -72,14 +72,8 @@ class DjangoContentStudioConfig(AppConfig):
             search_fields = list(getattr(_admin_model, "search_fields", []))
 
             def get_serializer_class(self):
-                # For inline admin models we include the specified fields.
-                if inline:
-                    available_fields = [
-                        "id",
-                        "__str__",
-                    ] + list(getattr(self._admin_model, "fields", []) or [])
                 # For list views we include the specified list_display fields.
-                elif self.action == "list" and not self.is_singleton:
+                if self.action == "list" and not self.is_singleton:
                     available_fields = [
                         "id",
                         "__str__",
@@ -96,12 +90,11 @@ class DjangoContentStudioConfig(AppConfig):
 
                 return Serializer
 
-        try:
-            content_studio_router.register(
-                f"api/content/{model._meta.label_lower}",
-                ViewSet,
-                f"content_studio_api-{model._meta.label_lower}",
-            )
-        except ImproperlyConfigured:
-            # It's possible that inline models are already registered.
-            pass
+        if parent:
+            prefix = f"api/inlines/{parent._meta.label_lower}/{model._meta.label_lower}"
+            basename = f"content_studio_api-{parent._meta.label_lower}-{model._meta.label_lower}"
+        else:
+            prefix = f"api/content/{model._meta.label_lower}"
+            basename = f"content_studio_api-{model._meta.label_lower}"
+
+        content_studio_router.register(prefix, ViewSet, basename)

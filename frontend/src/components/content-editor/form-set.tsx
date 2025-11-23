@@ -7,9 +7,11 @@ import { FormField } from "./form-field";
 export function FormSet({
   formSet,
   model,
+  hiddenFields = [],
 }: {
   formSet: FormSet;
   model: Model;
+  hiddenFields?: string[];
 }) {
   return (
     <div>
@@ -30,12 +32,20 @@ export function FormSet({
                 gridTemplateColumns: `repeat(${formField.fields.length}, 1fr)`,
               }}
             >
-              {formField.fields.map((innerFormField) => (
-                <FormField key={idx} formField={innerFormField} model={model} />
-              ))}
+              {formField.fields
+                .filter((f) => !hiddenFields.includes(f.name))
+                .map((innerFormField) => (
+                  <FormField
+                    key={idx}
+                    formField={innerFormField}
+                    model={model}
+                  />
+                ))}
             </div>
           ) : (
-            <FormField key={idx} formField={formField} model={model} />
+            !hiddenFields.includes(formField.name) && (
+              <FormField key={idx} formField={formField} model={model} />
+            )
           ),
         )}
       </div>

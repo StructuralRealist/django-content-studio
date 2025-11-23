@@ -102,7 +102,11 @@ export interface Model {
     edit: {
       main: FormSetGroup[];
       sidebar: FormSet[];
-      inlines: { model: string; fk_name: string; fields: string[] | null }[];
+      inlines: {
+        model: string;
+        fk_name: string;
+        list_display: string[] | null;
+      }[];
     };
     permissions: {
       add_permission: boolean;

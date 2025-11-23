@@ -16,21 +16,28 @@ import { Main } from "./main";
 export function Editor({
   modelLabel,
   id,
+  initialValues = {},
   onDelete,
   onSave,
   onClose,
 }: {
   modelLabel: string;
   id?: string | null;
-  onDelete: VoidFunction;
+  initialValues?: Record<string, any>;
   onSave: VoidFunction;
   onClose: VoidFunction;
+  onDelete?: VoidFunction;
 }) {
   const queryClient = useQueryClient();
   const http = useHttp();
   const { data: discover } = useDiscover();
   const model = discover?.models.find(R.whereEq({ label: modelLabel }));
   const isSingleton = model?.admin.is_singleton ?? false;
+  const hiddenFields = Object.keys(initialValues);
+  const defaultValues = Object.entries(model?.fields ?? {}).reduce(
+    (defaults, [key, field]) => ({ ...defaults, [key]: field.default }),
+    {},
+  );
   const formSchema = z.looseObject({
     id: z.string().readonly().optional(),
     __str__: z.string().readonly().optional(),
@@ -38,10 +45,7 @@ export function Editor({
   const form = useForm<Partial<Resource>>({
     resolver: zodResolver(formSchema),
     mode: "onChange",
-    defaultValues: Object.entries(model?.fields ?? {}).reduce(
-      (defaults, [key, field]) => ({ ...defaults, [key]: field.default }),
-      {},
-    ),
+    defaultValues: R.mergeDeepLeft(initialValues, defaultValues),
   });
 
   const { data: resource } = useQuery({
@@ -94,12 +98,12 @@ export function Editor({
           <div className="flex flex-1 justify-center overflow-y-auto">
             <div className="w-full max-w-3xl">
               <div className="p-5">
-                <Main model={model} id={id} />
+                <Main model={model} id={id} hiddenFields={hiddenFields} />
               </div>
             </div>
             <div className="w-full max-w-[360px]">
               <div className="p-5">
-                <Aside model={model} />
+                <Aside model={model} hiddenFields={hiddenFields} />
               </div>
             </div>
           </div>

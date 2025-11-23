@@ -21,6 +21,7 @@ export function ItemCard({
   item,
   className,
   children,
+  onClick,
   ...props
 }: {
   item: MediaItem;
@@ -36,7 +37,13 @@ export function ItemCard({
       <ContextMenuTrigger asChild key={item.id}>
         <button
           {...props}
-          onClick={() => setEdit(true)}
+          onClick={(e) => {
+            if (onClick) {
+              onClick(e);
+              return;
+            }
+            setEdit(true);
+          }}
           className={cn(
             "border rounded p-4 data-[state=open]:border-ring flex flex-col",
             {

@@ -1,11 +1,12 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { PiPlus } from "react-icons/pi";
 
 import { FormatRenderer } from "@/components/formats/renderer";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Pagination } from "@/components/ui/pagination";
 import {
   Table,
@@ -22,29 +23,41 @@ import type { Id, Model, PaginatedResponse, Resource } from "@/types";
 import { Editor } from "./editor";
 
 export function Inline({
+  relModel,
   relId,
   model,
   adminModel,
 }: {
+  // Related model label
+  relModel: string;
   // Related resource id
   relId: Id;
   // Inline model
   model: Model;
   // Inline admin model
-  adminModel: { fk_name: string; fields: string[] | null };
+  adminModel: { fk_name: string; list_display: string[] | null };
 }) {
   const { t } = useTranslation();
   const http = useHttp();
+  const [create, setCreate] = useState(false);
   const [page, setPage] = useState(1);
   const readOnly = !model.admin;
+  const relName = useWatch({ name: "__str__" });
   const { data } = useQuery({
     retry: false,
     refetchOnWindowFocus: true,
     placeholderData: keepPreviousData,
-    queryKey: ["resources", model.label, adminModel.fk_name, relId, page],
+    queryKey: [
+      "resources",
+      relModel,
+      model.label,
+      adminModel.fk_name,
+      relId,
+      page,
+    ],
     async queryFn() {
       const { data } = await http.get<PaginatedResponse<Resource>>(
-        `/content/${model.label}`,
+        `/inlines/${relModel}/${model.label}`,
         {
           params: { [`${adminModel.fk_name}_id`]: relId, page },
         },
@@ -56,33 +69,36 @@ export function Inline({
 
   return (
     <div className="space-y-4">
+      <Dialog open={create} onOpenChange={setCreate}>
+        <DialogContent className="p-0 sm:max-w-5xl" showCloseButton={false}>
+          <Editor
+            modelLabel={model.label}
+            initialValues={{
+              [adminModel.fk_name]: { id: relId, __str__: relName },
+            }}
+            onSave={() => setCreate(false)}
+            onClose={() => setCreate(false)}
+          />
+        </DialogContent>
+      </Dialog>
       <div className="border rounded-lg">
         <Table>
           <TableHeader>
             <TableRow>
-              {adminModel.fields?.map((field, idx) => (
+              {adminModel.list_display?.map((field, idx) => (
                 <TableHead key={field}>
                   <div className="flex items-center">
                     {model.fields[field]?.verbose_name}
-                    {idx === adminModel.fields!.length - 1 && (
+                    {idx === adminModel.list_display!.length - 1 && (
                       <div className="flex-1 inline-flex justify-end">
-                        <Dialog>
-                          <DialogContent
-                            className="p-0 sm:max-w-5xl"
-                            showCloseButton={false}
-                          >
-                            <Editor
-                              modelLabel={model.label}
-                              onDelete={() => {}}
-                            />
-                          </DialogContent>
-                          <DialogTrigger asChild>
-                            <Button size="sm" variant="outline">
-                              <PiPlus />
-                              {t("common.create")}
-                            </Button>
-                          </DialogTrigger>
-                        </Dialog>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setCreate(true)}
+                        >
+                          <PiPlus />
+                          {t("common.create")}
+                        </Button>
                       </div>
                     )}
                   </div>
@@ -92,32 +108,15 @@ export function Inline({
           </TableHeader>
           <TableBody>
             {data?.results.map((resource) => (
-              <Dialog key={resource.id}>
-                {!readOnly && (
-                  <DialogContent
-                    className="p-0 sm:max-w-5xl"
-                    showCloseButton={false}
-                  >
-                    <Editor modelLabel={model.label} id={resource.id} />
-                  </DialogContent>
-                )}
-                <DialogTrigger asChild>
-                  <TableRow
-                    className={cn({
-                      "hover:bg-transparent": readOnly,
-                    })}
-                  >
-                    {adminModel.fields?.map((field) => (
-                      <TableCell key={field}>
-                        <FormatRenderer
-                          value={resource[field]}
-                          field={model.fields[field]}
-                        />
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                </DialogTrigger>
-              </Dialog>
+              <InlineRow
+                key={resource.id}
+                resource={resource}
+                model={model}
+                adminModel={adminModel}
+                relId={relId}
+                relName={relName}
+                readOnly={readOnly}
+              />
             ))}
           </TableBody>
         </Table>
@@ -133,5 +132,59 @@ export function Inline({
         </div>
       )}
     </div>
+  );
+}
+
+function InlineRow({
+  resource,
+  readOnly,
+  model,
+  adminModel,
+  relId,
+  relName,
+}: {
+  relId: Id;
+  relName: string;
+  resource: Resource;
+  readOnly: boolean;
+  model: Model;
+  adminModel: { fk_name: string; list_display: string[] | null };
+}) {
+  const [edit, setEdit] = useState(false);
+
+  return (
+    <>
+      <Dialog key={resource.id} open={edit} onOpenChange={setEdit}>
+        {!readOnly && (
+          <DialogContent className="p-0 sm:max-w-5xl" showCloseButton={false}>
+            <Editor
+              modelLabel={model.label}
+              id={resource.id}
+              initialValues={{
+                [adminModel.fk_name]: { id: relId, __str__: relName },
+              }}
+              onSave={() => setEdit(false)}
+              onClose={() => setEdit(false)}
+              onDelete={() => setEdit(false)}
+            />
+          </DialogContent>
+        )}
+      </Dialog>
+      <TableRow
+        onClick={() => !readOnly && setEdit(true)}
+        className={cn({
+          "hover:bg-transparent": readOnly,
+        })}
+      >
+        {adminModel.list_display?.map((field) => (
+          <TableCell key={field}>
+            <FormatRenderer
+              value={resource[field]}
+              field={model.fields[field]}
+            />
+          </TableCell>
+        ))}
+      </TableRow>
+    </>
   );
 }

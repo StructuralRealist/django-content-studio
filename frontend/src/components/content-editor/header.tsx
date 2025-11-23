@@ -103,7 +103,7 @@ export function Header({
             >
               {t(isCreate ? "common.create" : "common.save")}
             </Button>
-            {!isSingleton && (
+            {!isSingleton && !isCreate && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button size="icon" variant="ghost">

@@ -194,7 +194,8 @@ class AdminSerializer:
                     {
                         "model": inline.model._meta.label_lower,
                         "fk_name": get_related_field_name(inline, admin_class.model),
-                        "fields": inline.fields or ["__str__"],
+                        "list_display": getattr(inline, "list_display", None)
+                        or ["__str__"],
                     }
                     for inline in admin_class.inlines
                 ],

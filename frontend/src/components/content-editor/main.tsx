@@ -8,7 +8,15 @@ import type { Id, Model } from "@/types";
 import { FormSet } from "./form-set";
 import { Inline } from "./inline";
 
-export function Main({ model, id }: { model: Model; id?: Id | null }) {
+export function Main({
+  model,
+  id,
+  hiddenFields,
+}: {
+  model: Model;
+  id?: Id | null;
+  hiddenFields: string[];
+}) {
   const { t } = useTranslation();
   const { data: discover } = useDiscover();
   const {
@@ -53,7 +61,11 @@ export function Main({ model, id }: { model: Model; id?: Id | null }) {
           >
             {formSetGroup.formsets.map((formSet, idx) => (
               <section key={idx} className="border rounded-lg p-4 w-full">
-                <FormSet model={model} formSet={formSet} />
+                <FormSet
+                  model={model}
+                  formSet={formSet}
+                  hiddenFields={hiddenFields}
+                />
               </section>
             ))}
           </TabsContent>
@@ -66,7 +78,12 @@ export function Main({ model, id }: { model: Model; id?: Id | null }) {
 
               return inlineModel ? (
                 <TabsContent key={inline.model} value={inline.model}>
-                  <Inline relId={id} model={inlineModel} adminModel={inline} />
+                  <Inline
+                    relModel={model.label}
+                    relId={id}
+                    model={inlineModel}
+                    adminModel={inline}
+                  />
                 </TabsContent>
               ) : null;
             })
