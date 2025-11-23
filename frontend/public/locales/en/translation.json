@@ -70,5 +70,13 @@
     "date_picker": {
       "placeholder": "Select a date"
     }
+  },
+    "dashboard": {
+    "widgets": {
+      "activity_log": {
+        "title": "Activity log",
+        "subtitle": "Latest updates from your team"
+      }
+    }
   }
 }

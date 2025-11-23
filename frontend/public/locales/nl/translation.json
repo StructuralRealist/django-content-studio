@@ -70,5 +70,18 @@
      "date_picker": {
       "placeholder": "Selecteer een datum"
     }
+  },
+  "dashboard": {
+    "widgets": {
+      "activity_log": {
+        "title": "Activiteitenlogboek",
+        "subtitle": "Recente updates van je team",
+        "action_flags": {
+          "1": "voegde toe",
+          "2": "bewerkte",
+          "3": "verwijderde"
+        }
+      }
+    }
   }
 }

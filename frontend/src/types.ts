@@ -230,3 +230,29 @@ export interface MediaItem {
   type: "file" | "image" | "video" | "audio";
   size: number;
 }
+
+export interface Dashboard {
+  widgets: DashboardWidget[];
+}
+
+export interface DashboardWidget {
+  name: DashboardWidgetType;
+  col_span: number;
+}
+
+export enum DashboardWidgetType {
+  ActivityLogWidget = "ActivityLogWidget",
+}
+
+export interface ActivityLogEntry {
+  id: number;
+  action_flag: 1 | 2 | 3; // Addition, change or deletion
+  action_time: DateTimeString;
+  object_repr: string;
+  object_id: string;
+  object_model: string;
+  user?: {
+    id: string;
+    __str__: string;
+  };
+}

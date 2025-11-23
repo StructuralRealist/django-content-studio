@@ -86,6 +86,7 @@ class AdminApiViewSet(ViewSet):
         """
         Returns information about the Django app (models, admin models, admin site, settings, etc.).
         """
+        admin_site = cs_settings.ADMIN_SITE
         data = {
             "models": get_models(request),
             "model_groups": get_model_groups(),
@@ -103,6 +104,11 @@ class AdminApiViewSet(ViewSet):
                 "folder_model": folder_model._meta.label_lower,
             },
         }
+
+        if admin_site.dashboard:
+            data["dashboard"] = admin_site.dashboard.serialize()
+        else:
+            data["dashboard"] = {"widgets": []}
 
         return Response(data=data)
 

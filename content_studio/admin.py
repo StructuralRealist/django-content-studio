@@ -6,7 +6,6 @@ from django.db.models import Model
 from rest_framework.request import HttpRequest
 
 from . import widgets, formats
-from .dashboard import Dashboard
 from .form import FormSet, FormSetGroup
 from .login_backends import LoginBackendManager
 from .token_backends import TokenBackendManager
@@ -32,7 +31,7 @@ class AdminSite(admin.AdminSite):
 
     login_backend = LoginBackendManager()
 
-    dashboard = Dashboard()
+    dashboard = None
 
     model_groups = None
 
@@ -85,6 +84,10 @@ class AdminSite(admin.AdminSite):
         # Add login backend's view set to the
         # Content Studio router.
         self.login_backend.set_up_router()
+        # Add dashboard's view set to the
+        # Content Studio router.
+        if self.dashboard:
+            self.dashboard.set_up_router()
 
     def get_thumbnail(self, obj) -> str:
         """

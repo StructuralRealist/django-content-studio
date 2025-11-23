@@ -1,18 +1,18 @@
 import inspect
 
-from content_studio.settings import cs_settings
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework.relations import RelatedField
 
 user_model = get_user_model()
 
-admin_site = cs_settings.ADMIN_SITE
-
 
 class ContentRelatedField(RelatedField):
 
     def to_representation(self, value):
+        from content_studio.settings import cs_settings
+
+        admin_site = cs_settings.ADMIN_SITE
         data = {"id": value.id, "__str__": str(value)}
 
         # Add file URL and media type if the model is a media library model.
@@ -102,6 +102,17 @@ class SessionUserSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "username",
+            "first_name",
+            "last_name",
+        )
+
+
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = user_model
+        fields = (
+            "id",
             "first_name",
             "last_name",
         )
