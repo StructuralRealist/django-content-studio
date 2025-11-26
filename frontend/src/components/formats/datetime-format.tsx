@@ -5,6 +5,8 @@ dayjs.extend(relativeTime);
 
 export function DatetimeFormat({ value }: { value: unknown }) {
   return typeof value === "string" && dayjs(value).isValid() ? (
-    <span>{dayjs(value).fromNow()}</span>
+    <span className="font-normal text-muted-foreground">
+      {dayjs(value).fromNow()}
+    </span>
   ) : null;
 }

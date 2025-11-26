@@ -4,17 +4,19 @@ import React, { useMemo } from "react";
 import { useAdminInfo } from "@/hooks/use-admin-info";
 import { FieldType, FieldWidget, type ModelField } from "@/types";
 
-import { DateWidget } from "./date-widget.tsx";
+import { DateWidget } from "./date-widget";
 import { FallbackWidget } from "./fallback-widget";
 import { ForeignKeyWidget } from "./foreign-key-widget";
 import { InputWidget } from "./input-widget";
 import { JSONSchemaWidget } from "./json-schema-widget";
-import { ManyToManyWidget } from "./many-to-many-widget.tsx";
+import { ManyToManyWidget } from "./many-to-many-widget";
 import { MediaWidget } from "./media-widget";
-import { MultiSelectWidget } from "./multi-select-widget.tsx";
+import { MultiSelectWidget } from "./multi-select-widget";
 import { RichTextWidget } from "./rich-text-widget";
 import { SelectWidget } from "./select-widget";
+import { SlugWidget } from "./slug-widget";
 import { TextAreaWidget } from "./text-area-widget";
+import { URLPathWidget } from "./url-path-widget";
 
 export function WidgetRenderer({
   value,
@@ -46,7 +48,8 @@ export function WidgetRenderer({
         [R.equals(FieldWidget.MultiSelectWidget), R.always(MultiSelectWidget)],
         [R.equals(FieldWidget.RichTextWidget), R.always(RichTextWidget)],
         [R.equals(FieldWidget.TextAreaWidget), R.always(TextAreaWidget)],
-        [R.equals(FieldWidget.URLPathWidget), R.always(InputWidget)],
+        [R.equals(FieldWidget.SlugWidget), R.always(SlugWidget)],
+        [R.equals(FieldWidget.URLPathWidget), R.always(URLPathWidget)],
         [R.T, R.always(FallbackWidget)],
       ])(widgetClass),
     [field.choices, field.type, widgetClass],

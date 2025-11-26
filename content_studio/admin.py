@@ -54,6 +54,8 @@ class AdminSite(admin.AdminSite):
         models.OneToOneField: widgets.ForeignKeyWidget,
         models.DateField: widgets.DateWidget,
         models.DateTimeField: widgets.DateTimeWidget,
+        # Common third-party fields
+        "AutoSlugField": widgets.SlugWidget,
     }
 
     default_format_mapping = {
@@ -205,6 +207,8 @@ class AdminSerializer:
                 "description": getattr(admin_class, "list_description", ""),
                 "display": admin_class.list_display,
                 "search": len(admin_class.search_fields) > 0,
+                "filter": admin_class.list_filter,
+                "sortable_by": admin_class.sortable_by,
             },
             "widget_mapping": {
                 field: widget.serialize() for field, widget in widget_mapping.items()

@@ -15,6 +15,7 @@ export function useDiscover() {
         dashboard: Dashboard;
         model_groups: ModelGroup[];
         models: Model[];
+        user_model: string;
         media_library: {
           enabled: boolean;
           folders: boolean;

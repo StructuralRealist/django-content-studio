@@ -60,10 +60,7 @@ class AdminApiViewSet(ViewSet):
                 model_class.__name__: frmt.serialize()
                 for model_class, frmt in admin_site.default_format_mapping.items()
             },
-            "widgets": {
-                model_class.__name__: widget.serialize()
-                for model_class, widget in admin_site.default_widget_mapping.items()
-            },
+            "widgets": get_widgets(),
             "settings": {
                 "created_by_attr": cs_settings.CREATED_BY_ATTR,
                 "created_at_attr": cs_settings.CREATED_AT_ATTR,
@@ -166,6 +163,15 @@ def get_model_groups():
         }
         for group in model_groups
     ]
+
+
+def get_widgets():
+    admin_site = cs_settings.ADMIN_SITE
+
+    return {
+        (m if isinstance(m, str) else m.__name__): widget.serialize()
+        for m, widget in admin_site.default_widget_mapping.items()
+    }
 
 
 def get_health_check_path():
