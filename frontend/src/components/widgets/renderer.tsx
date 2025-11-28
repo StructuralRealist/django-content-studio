@@ -4,6 +4,7 @@ import React, { useMemo } from "react";
 import { useAdminInfo } from "@/hooks/use-admin-info";
 import { FieldType, FieldWidget, type ModelField } from "@/types";
 
+import { CheckboxWidget } from "./checkbox-widget.tsx";
 import { DateWidget } from "./date-widget";
 import { FallbackWidget } from "./fallback-widget";
 import { ForeignKeyWidget } from "./foreign-key-widget";
@@ -50,6 +51,7 @@ export function WidgetRenderer({
         [R.equals(FieldWidget.TextAreaWidget), R.always(TextAreaWidget)],
         [R.equals(FieldWidget.SlugWidget), R.always(SlugWidget)],
         [R.equals(FieldWidget.URLPathWidget), R.always(URLPathWidget)],
+        [R.equals(FieldWidget.CheckboxWidget), R.always(CheckboxWidget)],
         [R.T, R.always(FallbackWidget)],
       ])(widgetClass),
     [field.choices, field.type, widgetClass],

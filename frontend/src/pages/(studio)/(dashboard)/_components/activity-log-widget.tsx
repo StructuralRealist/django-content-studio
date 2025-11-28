@@ -4,10 +4,10 @@ import * as R from "ramda";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 
-import { useDiscover } from "@/hooks/use-discover.ts";
-import { useHttp } from "@/hooks/use-http.ts";
-import { cn } from "@/lib/utils.ts";
-import { type ActivityLogEntry, DashboardWidgetType } from "@/types.ts";
+import { useDiscover } from "@/hooks/use-discover";
+import { useHttp } from "@/hooks/use-http";
+import { cn } from "@/lib/utils";
+import { type ActivityLogEntry, DashboardWidgetType } from "@/types";
 
 export function ActivityLogWidget() {
   const http = useHttp();
