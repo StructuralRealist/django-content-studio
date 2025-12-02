@@ -17,6 +17,7 @@ import { RichTextWidget } from "./rich-text-widget";
 import { SelectWidget } from "./select-widget";
 import { SlugWidget } from "./slug-widget";
 import { TextAreaWidget } from "./text-area-widget";
+import { TimeWidget } from "./time-widget.tsx";
 import { URLPathWidget } from "./url-path-widget";
 
 export function WidgetRenderer({
@@ -52,6 +53,7 @@ export function WidgetRenderer({
         [R.equals(FieldWidget.SlugWidget), R.always(SlugWidget)],
         [R.equals(FieldWidget.URLPathWidget), R.always(URLPathWidget)],
         [R.equals(FieldWidget.CheckboxWidget), R.always(CheckboxWidget)],
+        [R.equals(FieldWidget.TimeWidget), R.always(TimeWidget)],
         [R.T, R.always(FallbackWidget)],
       ])(widgetClass),
     [field.choices, field.type, widgetClass],

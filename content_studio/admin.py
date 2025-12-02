@@ -54,6 +54,7 @@ class AdminSite(admin.AdminSite):
         models.OneToOneField: widgets.ForeignKeyWidget,
         models.DateField: widgets.DateWidget,
         models.DateTimeField: widgets.DateTimeWidget,
+        models.TimeField: widgets.TimeWidget,
         # Common third-party fields
         "AutoSlugField": widgets.SlugWidget,
     }
