@@ -75,5 +75,9 @@ class JSONSchemaWidget(BaseWidget):
     pass
 
 
+class JSONWidget(BaseWidget):
+    pass
+
+
 class MediaWidget(BaseWidget):
     pass

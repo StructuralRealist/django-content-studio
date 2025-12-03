@@ -53,3 +53,7 @@ class FileSizeFormat(BaseFormat):
 
 class TagFormat(BaseFormat):
     pass
+
+
+class JSONFormat(BaseFormat):
+    pass

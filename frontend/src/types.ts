@@ -193,6 +193,7 @@ export enum FieldFormat {
   TagFormat = "TagFormat",
   TextFormat = "TextFormat",
   TimeFormat = "TimeFormat",
+  JSONFormat = "JSONFormat",
 }
 
 export enum FieldWidget {

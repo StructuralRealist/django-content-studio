@@ -1,5 +1,6 @@
 "use client";
-
+import dayjs from "dayjs";
+import localizedFormat from "dayjs/plugin/localizedFormat";
 import { ChevronDownIcon } from "lucide-react";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
@@ -10,18 +11,27 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import type { DateString } from "@/types";
 
-export function DateWidget() {
+dayjs.extend(localizedFormat);
+
+export function DateWidget({
+  value,
+  onChange,
+}: {
+  value?: DateString;
+  onChange?: any;
+}) {
   const { t } = useTranslation();
   const [open, setOpen] = React.useState(false);
-  const [date, setDate] = React.useState<Date | undefined>(undefined);
+  const date$ = React.useMemo(() => dayjs(value, "YYYY-MM-DD"), [value]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger className="h-8 border hover:border-slate-300 px-3 rounded-md flex items-center select-none">
         <div className="flex-1 text-left text-sm">
-          {date ? (
-            date.toLocaleDateString()
+          {date$ ? (
+            date$.format("ll")
           ) : (
             <span className="text-muted-foreground">
               {t("widgets.date_picker.placeholder")}
@@ -34,9 +44,12 @@ export function DateWidget() {
         <Calendar
           mode="single"
           fixedWeeks
-          selected={date}
+          defaultMonth={date$.toDate()}
+          selected={date$.toDate()}
           onSelect={(date) => {
-            setDate(date);
+            if (date) {
+              onChange?.(dayjs(date).format("YYYY-MM-DD"));
+            }
             setOpen(false);
           }}
         />

@@ -55,6 +55,7 @@ class AdminSite(admin.AdminSite):
         models.DateField: widgets.DateWidget,
         models.DateTimeField: widgets.DateTimeWidget,
         models.TimeField: widgets.TimeWidget,
+        models.JSONField: widgets.JSONWidget,
         # Common third-party fields
         "AutoSlugField": widgets.SlugWidget,
     }
@@ -78,6 +79,7 @@ class AdminSite(admin.AdminSite):
         models.TimeField: formats.TimeFormat,
         models.ForeignKey: formats.ForeignKeyFormat,
         models.OneToOneField: formats.ForeignKeyFormat,
+        models.JSONField: formats.JSONFormat,
     }
 
     def setup(self):

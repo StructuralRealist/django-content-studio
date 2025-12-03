@@ -1,6 +1,7 @@
 import * as R from "ramda";
 import { useMemo } from "react";
 
+import { JSONFormat } from "@/components/formats/json-format.tsx";
 import { useAdminInfo } from "@/hooks/use-admin-info";
 import { FieldFormat, FieldType, type ModelField } from "@/types";
 
@@ -43,6 +44,7 @@ export function FormatRenderer({
         [R.equals(FieldFormat.DateTimeFormat), R.always(DatetimeFormat)],
         [R.equals(FieldFormat.ForeignKeyFormat), R.always(ForeignKeyFormat)],
         [R.equals(FieldFormat.MediaFormat), R.always(MediaFormat)],
+        [R.equals(FieldFormat.JSONFormat), R.always(JSONFormat)],
         [R.T, R.always(TextFormat)],
       ])(formatClass),
     [field?.choices, field?.type, formatClass],

@@ -81,26 +81,14 @@ export function Inline({
           />
         </DialogContent>
       </Dialog>
-      <div className="border rounded-lg">
+      <div className="border rounded-lg scrollbar">
         <Table>
           <TableHeader>
             <TableRow>
-              {adminModel.list_display?.map((field, idx) => (
+              {adminModel.list_display?.map((field) => (
                 <TableHead key={field}>
                   <div className="flex items-center">
                     {model.fields[field]?.verbose_name}
-                    {idx === adminModel.list_display!.length - 1 && (
-                      <div className="flex-1 inline-flex justify-end">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => setCreate(true)}
-                        >
-                          <PiPlus />
-                          {t("common.create")}
-                        </Button>
-                      </div>
-                    )}
                   </div>
                 </TableHead>
               ))}
@@ -131,6 +119,13 @@ export function Inline({
           />
         </div>
       )}
+
+      <div className="flex justify-center">
+        <Button size="sm" variant="outline" onClick={() => setCreate(true)}>
+          <PiPlus />
+          {t("common.create")}
+        </Button>
+      </div>
     </div>
   );
 }
