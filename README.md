@@ -7,8 +7,6 @@
 
 Django Content Studio is a modern, flexible alternative to the Django admin.
 
-> This package is still under development
-
 ## 🚀 Quick Start
 
 ### Installation
@@ -47,8 +45,8 @@ urlpatterns = [
 
 ## 🐛 Issues & Support
 
-- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/StructuralRealist/django-content-studio/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/StructuralRealist/django-content-studio/discussions)
+- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/BitsOfAbstraction/django-content-studio/issues)
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/BitsOfAbstraction/django-content-studio/discussions)
 - 📧 **Email**: leon@devtastic.io
 
 ## 📄 License
@@ -64,7 +62,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🔗 Links
 
 - [PyPI Package](https://pypi.org/project/django-content-studio/)
-- [GitHub Repository](https://github.com/StructuralRealist/django-content-studio)
+- [GitHub Repository](https://github.com/BitsOfAbstraction/django-content-studio)
 - [Changelog](CHANGELOG.md)
 
 ---
