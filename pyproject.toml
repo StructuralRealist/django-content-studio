@@ -1,6 +1,6 @@
 [project]
 name = "django-content-studio"
-version = "1.0.0-beta.1"
+version = "1.0.0-beta.2-1"
 description = "Modern & flexible Django admin"
 authors = [
     {name = "Leon van der Grient",email = "leon@devtastic.io"}
@@ -12,7 +12,9 @@ dependencies = []
 
 [tool.poetry]
 packages = [{include = "content_studio"}]
-include = [{path = "content_studio/static/**/*"}]
+include = [
+    { path = "content_studio/static/**/*", format = "sdist" },
+    { path = "content_studio/static/**/*", format = "wheel" }]
 
 [tool.poetry.group.dev.dependencies]
 black = "^25.1.0"
