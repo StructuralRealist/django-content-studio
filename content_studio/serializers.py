@@ -114,14 +114,3 @@ class SessionUserSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
         )
-
-
-class UserSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = user_model
-        fields = (
-            "id",
-            "first_name",
-            "last_name",
-        )

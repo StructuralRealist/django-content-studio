@@ -53,7 +53,7 @@ function SingleMedia({
         )
       ) : (
         <img
-          src="/img/media_placeholder.svg"
+          src={`${R.propOr("/", "DCS_STATIC_PREFIX", window)}img/media_placeholder.svg`}
           alt=""
           className="w-full h-64 object-cover rounded-md"
         />

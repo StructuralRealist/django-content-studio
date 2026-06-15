@@ -5,7 +5,6 @@ import "dayjs/locale/en";
 import "dayjs/locale/nl";
 import "dayjs/locale/fr";
 import "dayjs/locale/de";
-import "@fontsource-variable/geist";
 
 import dayjs from "dayjs";
 import { useEffect } from "react";

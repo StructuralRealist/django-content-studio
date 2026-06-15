@@ -1,5 +1,6 @@
 from django.apps import AppConfig
 from django.contrib import admin
+from django.contrib.auth import get_user_model
 
 from . import VERSION
 from .paginators import ContentPagination
@@ -92,12 +93,20 @@ class DjangoContentStudioConfig(AppConfig):
             search_fields = list(getattr(_admin_model, "search_fields", []))
 
             def get_serializer_class(self):
+                user_model = get_user_model()
+                excluded_fields = None
                 # For list views we include the specified list_display fields.
                 if self.action == "list" and not self.is_singleton:
                     available_fields = [
                         "id",
                         "__str__",
                     ] + list(getattr(self._admin_model, "list_display", []))
+                # For the user model we exclude the password and the username field.
+                elif model is user_model:
+                    available_fields = None
+                    excluded_fields = ["password"]
+                    if user_model.USERNAME_FIELD != "username":
+                        excluded_fields.append("username")
                 # In all other cases we include all fields.
                 else:
                     available_fields = "__all__"
@@ -107,6 +116,7 @@ class DjangoContentStudioConfig(AppConfig):
                     class Meta:
                         model = self._model
                         fields = available_fields
+                        exclude = excluded_fields
 
                 return Serializer
 
