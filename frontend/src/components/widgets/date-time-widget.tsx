@@ -6,23 +6,26 @@ import * as React from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { TimeWidget } from "@/components/widgets/time-widget.tsx";
-import type { DateString } from "@/types";
+import { TimeWidget } from "@/components/widgets/time-widget";
+import type { DateString, ModelField } from "@/types";
 
 dayjs.extend(localizedFormat);
 
 export function DateTimeWidget({
   value,
   onChange,
+  field,
 }: {
   value?: DateString;
   onChange?: any;
+  field: ModelField;
 }) {
   const { t } = useTranslation();
   const [open, setOpen] = React.useState(false);
@@ -30,15 +33,14 @@ export function DateTimeWidget({
     () => (value ? dayjs(value, "YYYY-MM-DD HH:mm") : null),
     [value],
   );
-  const [time, setTime] = useState(date$?.format("HH:mm") ?? "");
+  const [time, setTime] = useState(date$?.format("HH:mm") ?? "00:00");
   const [date, setDate] = useState(date$?.toDate() ?? undefined);
-
   return (
     <Popover
       open={open}
       onOpenChange={(isOpen) => {
         setOpen(isOpen);
-        if (!isOpen) {
+        if (!isOpen && date && time) {
           onChange?.(`${dayjs(date).format("YYYY-MM-DD")}T${time ?? "00:00"}`);
         }
       }}
@@ -72,6 +74,21 @@ export function DateTimeWidget({
         <div className="p-3 border-t">
           <TimeWidget value={time} onChange={setTime} />
         </div>
+        {!field.required && value && (
+          <div className="p-3 border-t">
+            <Button
+              variant="outline"
+              className="w-full"
+              size="sm"
+              onClick={() => {
+                onChange?.(null);
+                setOpen(false);
+              }}
+            >
+              {t("common.clear")}
+            </Button>
+          </div>
+        )}
       </PopoverContent>
     </Popover>
   );

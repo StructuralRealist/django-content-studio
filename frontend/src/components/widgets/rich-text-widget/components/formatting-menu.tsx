@@ -9,6 +9,7 @@ import {
   PiTextStrikethroughBold,
   PiTextUnderlineBold,
 } from "react-icons/pi";
+import { TbClearFormatting } from "react-icons/tb";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -75,6 +76,17 @@ export function FormattingMenu() {
         onPressedChange={() => editor?.chain().focus().toggleStrike().run()}
       >
         <PiTextStrikethroughBold />
+      </Toggle>
+
+      <Separator orientation="vertical" className="h-auto! self-stretch" />
+
+      <Toggle
+        pressed={state.orderedList}
+        onClick={() =>
+          editor?.chain().focus().unsetAllMarks().setNode("paragraph").run()
+        }
+      >
+        <TbClearFormatting />
       </Toggle>
 
       <Separator orientation="vertical" className="h-auto! self-stretch" />

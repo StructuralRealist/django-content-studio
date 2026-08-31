@@ -11,6 +11,7 @@
     "edit": "Edit",
     "continue": "Continue",
     "rename": "Rename",
+    "clear": "Clear",
     "move": "Move",
     "delete_confirm_title": "Are you sure?",
     "delete_confirm_description": "This action cannot be undone. Are you sure you want to delete?"

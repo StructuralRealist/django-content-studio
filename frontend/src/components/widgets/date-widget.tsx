@@ -5,22 +5,25 @@ import { ChevronDownIcon } from "lucide-react";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 
+import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import type { DateString } from "@/types";
+import type { DateString, ModelField } from "@/types";
 
 dayjs.extend(localizedFormat);
 
 export function DateWidget({
   value,
   onChange,
+  field,
 }: {
   value?: DateString;
   onChange?: any;
+  field: ModelField;
 }) {
   const { t } = useTranslation();
   const [open, setOpen] = React.useState(false);
@@ -58,6 +61,21 @@ export function DateWidget({
             setOpen(false);
           }}
         />
+        {!field.required && value && (
+          <div className="p-3 border-t">
+            <Button
+              variant="outline"
+              className="w-full"
+              size="sm"
+              onClick={() => {
+                onChange?.(null);
+                setOpen(false);
+              }}
+            >
+              {t("common.clear")}
+            </Button>
+          </div>
+        )}
       </PopoverContent>
     </Popover>
   );
